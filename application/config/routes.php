@@ -54,3 +54,5 @@ $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 $route['login']='LoginController';
 $route['login/Ingresar']='LoginController/ingresar';
+
+
