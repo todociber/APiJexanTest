@@ -20,25 +20,6 @@ class Welcome extends CI_Controller {
 	 */
 	public function index()
 	{
-        $this->load->model('UsersModels');
-        $this->load->model('TelephoneModels');
-        $password = 'todociber';
-        $hash = $this->bcrypt->hash_password($password);
-        $NuevoUsuario = new UsersModels();
-        $NuevoUsuario->fill([
-           "email"=>$this->bcrypt->hash_password("Todociber"),
-            "username"=>"todociberEsLaLey",
-            "password"=>$hash
-        ]);
-        $NuevoUsuario->save();
-
-        $usuarios = UsersModels::where('email','prueba@test1.com')->get();
-        echo $usuarios->count();
-		foreach ($usuarios as $usuario){
-		    echo $usuario->email.'</br>';
-		   foreach ($usuario->usuariosTelephone as $usuarioTelephone){
-		       echo  $usuarioTelephone->direactions.'</br>';
-           }
-        }
+        redirect('login');
 	}
 }

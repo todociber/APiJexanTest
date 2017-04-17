@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <?php echo $__env->yieldContent('title'); ?>
+            <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.5 -->
+    <?php echo Html::style('assets/css/bootstrap.css'); ?>
+
+            <!-- Font Awesome -->
+
+    <?php echo Html::style('assets/css/font-awesome.css'); ?>
+
+    <?php echo Html::style('dist/css/select2.css'); ?>
+
+            <!-- Ionicons -->
+
+    <!-- DataTables -->
+    <?php echo Html::style('assets/plugins/datatables/dataTables.bootstrap.css'); ?>
+
+            <!-- Theme style -->
+    <?php echo Html::style('assets/dist/css/AdminLTE.css'); ?>
+
+            <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <?php echo Html::style('assets/dist/css/skins/_all-skins.css'); ?>
+
+
+
+            <!-- jQuery 2.1.4 -->
+    <?php echo Html::script('assets/plugins/jQuery/jQuery-2.1.4.min.js'); ?>
+
+
+    <?php echo Html::script('dist/js/select2.full.js'); ?>
+
+            <!-- Bootstrap 3.3.5 -->
+    <?php echo Html::script('assets/js/bootstrap.min.js'); ?>
+
+            <!-- DataTables -->
+    <?php echo Html::script('assets/plugins/datatables/jquery.dataTables.min.js'); ?>
+
+    <?php echo Html::script('assets/plugins/datatables/dataTables.bootstrap.min.js'); ?>
+
+            <!-- SlimScroll -->
+    <?php echo Html::script('assets/plugins/slimScroll/jquery.slimscroll.min.js'); ?>
+
+            <!-- FastClick -->
+    <?php echo Html::script('assets/plugins/fastclick/fastclick.min.js'); ?>
+
+            <!-- AdminLTE App -->
+    <?php echo Html::script('assets/dist/js/app.min.js'); ?>
+
+            <!-- AdminLTE for demo purposes -->
+    <?php echo Html::script('assets/dist/js/demo.js'); ?>
+
+
+    <?php echo Html::script('assets/plugins/datepicker/bootstrap-datepicker.js'); ?>
+
+
+    <?php echo Html::script('assets/plugins/timepicker/bootstrap-timepicker.min.js'); ?>
+
+    <?php echo Html::script('assets/plugins/datepicker/locales/bootstrap-datepicker.es.js'); ?>
+
+    <?php echo Html::script('assets/js/jquery.mask.min.js'); ?>
+
+    <?php echo Html::style('assets/plugins/datepicker/datepicker3.css'); ?>
+
+    <?php echo Html::script('assets/js/loading.js'); ?>
+
+    <?php echo Html::script('assets/js/SERO.js'); ?>
+
+    <?php echo Html::style('assets/css/SERO.css'); ?>
+
+
+            <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <![endif]-->
+
+
+</head>
+<body class="hold-transition skin-black-light sidebar-mini">
+<div class="wrapper">
+
+    <header class="main-header">
+
+        <!-- Header Navbar: style can be found in header.less -->
+        <nav class="navbar navbar-static-top" role="navigation">
+            <!-- Logo -->
+            <a class="logo ">
+                <!-- mini logo for sidebar mini 50x50 pixels -->
+                <span class="logo-mini"><b>C</b>B</span>
+                <!-- logo for regular state and mobile devices -->
+                <span class="logo-lg"><b><?php echo e(Auth::user()->Organizacion->nombre); ?></b></span>
+            </a>
+            <!-- Sidebar toggle a-->
+            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="a">
+                <span class="sr-only">Toggle navigation</span>
+            </a>
+
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+                    <!-- Messages: style can be found in dropdown.less-->
+                    <!-- Tasks: style can be found in dropdown.less -->
+                    <!-- User Account: style can be found in dropdown.less -->
+                    <li class="dropdown user user-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+
+                            <span class="hidden-xs"><?php echo e(Auth::user()->nombre); ?> <?php echo e(Auth::user()->apellido); ?></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <!-- User image -->
+                            <li class="user-header">
+
+                                <p>
+
+                                </p>
+
+                            </li>
+                            <!-- Menu Body -->
+
+                            <!-- Menu Footer-->
+                            <li class="user-footer">
+                                <div class="pull-left">
+                                    <a href=""
+                                       class="btn btn-default btn-flat">Perfil</a>
+                                </div>
+                                <div class="pull-right">
+                                    <a href="" class="btn btn-default btn-flat">Cerrar Sesión</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- Control Sidebar Toggle a -->
+
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <!-- Left side column. contains the logo and sidebar -->
+    <aside class="main-sidebar">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+            <div class="user-panel">
+                <div class="pull-left info">
+                    <p><?php echo e(Auth::user()->nombre); ?> <?php echo e(Auth::user()->apellido); ?></p>
+
+                </div>
+            </div>
+
+            <!-- sidebar menu: : style can be found in sidebar.less -->
+            <ul class="sidebar-menu">
+                <li class="header">Menu</li>
+
+
+                <li><a href=""><i class="fa fa-circle-o text-yellow"></i>
+                        <span>Perfil</span></a></li>
+
+            </ul>
+        </section>
+        <!-- /.sidebar -->
+    </aside>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                <?php echo $__env->yieldContent('NombrePantalla'); ?>
+
+            </h1>
+
+        </section>
+
+
+        <!-- Main content -->
+        <section class="content">
+            <?php echo $__env->yieldContent('content'); ?>
+        </section>
+
+    </div><!-- /.content-wrapper -->
+    <footer class="main-footer">
+        <div class="pull-right hidden-xs">
+            <b>Version</b> 1.0.0
+        </div>
+        <strong>Copyright &copy; 2016-2017 <a href="https://bolsadevalores.com.sv">Bolsa de Valores de El Salvador</a>.</strong>
+        Derechos reservados.
+    </footer>
+
+
+</div>
+
+
+<script>
+    $(function () {
+                $("#example1").DataTable({
+                    "paging": true,
+                    "lengthChange": true,
+                    "searching": true,
+                    "ordering": true,
+                    "info": true,
+                    "autoWidth": true,
+                    responsive: true,
+                    "order": [],
+
+                    "language": {
+
+
+                        "sProcessing": "Procesando...",
+                        "sLengthMenu": "Mostrar _MENU_ registros",
+                        "sZeroRecords": "No se encontraron resultados",
+                        "sEmptyTable": "Ningún dato disponible en esta tabla",
+                        "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                        "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                        "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                        "sInfoPostFix": "",
+                        "sSearch": "Buscar:",
+                        "sUrl": "",
+                        "sInfoThousands": ",",
+                        "sLoadingRecords": "Cargando...",
+                        "oPaginate": {
+                            "sFirst": "Primero",
+                            "sLast": "Ãšltimo",
+                            "sNext": "Siguiente",
+                            "sPrevious": "Anterior"
+                        },
+                        "oAria": {
+                            "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                        }
+                    }
+
+                });
+            }
+    );
+    $('#example2').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        responsive: true,
+        "autoWidth": true,
+
+        "order": [],
+        "language": {
+
+
+            "sProcessing": "Procesando...",
+            "sLengthMenu": "Mostrar _MENU_ registros",
+            "sZeroRecords": "No se encontraron resultados",
+            "sEmptyTable": "Ningún dato disponible en esta tabla",
+            "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+            "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+            "sInfoPostFix": "",
+            "sSearch": "Buscar:",
+            "sUrl": "",
+            "sInfoThousands": ",",
+            "sLoadingRecords": "Cargando...",
+            "oPaginate": {
+                "sFirst": "Primero",
+                "sLast": "Ãšltimo",
+                "sNext": "Siguiente",
+                "sPrevious": "Anterior"
+            },
+            "oAria": {
+                "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+            }
+
+        }
+
+    });
+    $('#example3').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        responsive: true,
+        "autoWidth": true,
+
+        "order": [[3, 'asc'], [2, 'desc']],
+        "language": {
+
+
+            "sProcessing": "Procesando...",
+            "sLengthMenu": "Mostrar _MENU_ registros",
+            "sZeroRecords": "No se encontraron resultados",
+            "sEmptyTable": "Ningún dato disponible en esta tabla",
+            "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+            "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+            "sInfoPostFix": "",
+            "sSearch": "Buscar:",
+            "sUrl": "",
+            "sInfoThousands": ",",
+            "sLoadingRecords": "Cargando...",
+            "oPaginate": {
+                "sFirst": "Primero",
+                "sLast": "Ãšltimo",
+                "sNext": "Siguiente",
+                "sPrevious": "Anterior"
+            },
+            "oAria": {
+                "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+            }
+
+        }
+
+    });
+    $('#example4').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        responsive: true,
+        "autoWidth": true,
+
+        "order": [[3, 'asc'], [2, 'desc']],
+        "language": {
+
+
+            "sProcessing": "Procesando...",
+            "sLengthMenu": "Mostrar _MENU_ registros",
+            "sZeroRecords": "No se encontraron resultados",
+            "sEmptyTable": "Ningún dato disponible en esta tabla",
+            "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+            "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+            "sInfoPostFix": "",
+            "sSearch": "Buscar:",
+            "sUrl": "",
+            "sInfoThousands": ",",
+            "sLoadingRecords": "Cargando...",
+            "oPaginate": {
+                "sFirst": "Primero",
+                "sLast": "Ãšltimo",
+                "sNext": "Siguiente",
+                "sPrevious": "Anterior"
+            },
+            "oAria": {
+                "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+            }
+
+        }
+
+    });
+
+
+    $(document).ready(function () {
+    })
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,55 @@
+
+<?php if(!empty($_SESSION['success'])): ?>
+
+    <div class="alert alert-success">
+        <a href="#" class="close" data-dismiss="alert">&times;</a>
+        <strong></strong><?php echo e($_SESSION['success']); ?>
+
+    </div>
+<?php endif; ?>
+
+<?php if(!empty($_SESSION['error'])): ?>
+
+    <div class="alert alert-error">
+        <a href="#" class="close" data-dismiss="alert">&times;</a>
+        <strong></strong><?php echo e($_SESSION['error']); ?>
+
+    </div>
+<?php endif; ?>
+
+
+<?php if(!empty($_SESSION['warning'])): ?>
+
+    <div class="alert alert-warning">
+        <a href="#" class="close" data-dismiss="alert">&times;</a>
+        <strong></strong><?php echo e($_SESSION['warning']); ?>
+
+    </div>
+<?php endif; ?>
+
+
+
+<?php if(!empty($_SESSION['info'])): ?>
+
+    <div class="alert alert-info">
+        <a href="#" class="close" data-dismiss="alert">&times;</a>
+        <strong></strong><?php echo e($_SESSION['info']); ?>
+
+    </div>
+<?php endif; ?>
+
+<?php if(!empty($_SESSION['errors'])): ?>
+    <?php $errors = $_SESSION['errors'];?>
+    <div class="alert alert-error">
+        <a href="#" class="close" data-dismiss="alert">&times;</a>
+<?php $__currentLoopData = $errors; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getFirstLoop(); ?>
+
+
+           <li><?php echo e($error); ?></li>
+
+
+<?php endforeach; $__env->popLoop(); $loop = $__env->getFirstLoop(); ?>
+
+    </div>
+<?php endif; ?>
+
