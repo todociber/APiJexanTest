@@ -22,6 +22,8 @@ $config['iteration_count'] = 8;
 | Default: false
 |
 
+
+
 */
 $config['portable_hashes'] = FALSE;
 
