@@ -58,5 +58,8 @@ $route['login/reset_password']='Login_controller/reset_password';
 $route['login/generate_reset']['post'] ='Login_controller/generate_reset';
 $route['login/token/(:any)']['get']='Login_controller/token/$1';
 $route['login/token/change/(:any)']['post']='Login_controller/token_change/$1';
+$route['sellers']['get']='Sellers_controller';
+$route['sellers/new']['get']='Sellers_controller/newSeller';
+$route['getZipcodes']['get']='Sellers_controller/get_zipcodes';
 
 

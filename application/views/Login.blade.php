@@ -38,10 +38,8 @@
                                                 'role' => 'form')) !!}
                                                 <div class="form-group">
                                                     <label for="email" class="col-md-4 control-label">E-Mail Address</label>
-
                                                     <div class="col-md-6">
                                                         <input id="email" type="email" class="form-control" name="email" value="{!! @$_SESSION['email'] !!}" required="true" autofocus="">
-
                                                     </div>
                                                 </div>
 

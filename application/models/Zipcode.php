@@ -1,16 +1,16 @@
 <?php
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+
 class Zipcode extends Model {
 
     /**
      * Generated
      */
-    use SoftDeletes;
+
     protected $table = 'zipcodes';
     protected $fillable = ['ID', 'ZIP', 'City', 'State', 'County', 'Type'];
-    protected $dates = ['deleted_at'];
+
 
 
     public function users() {

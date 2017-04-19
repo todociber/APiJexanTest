@@ -235,6 +235,20 @@
                 });
             }
     );
+    $("#zipcodes").select2({
+        placeholder: '--- Search City or Zip Code ---',
+        ajax: {
+            url: '<?php echo e(base_url()); ?>getZipcodes',
+            dataType: 'json',
+            delay: 250,
+            processResults: function (data) {
+                return {
+                    results: data
+                };
+            },
+            cache: true
+        }
+    });
     $('#example2').DataTable({
         "paging": true,
         "lengthChange": true,
@@ -352,7 +366,6 @@
         }
 
     });
-
 
     $(document).ready(function () {
     })
