@@ -3,7 +3,7 @@
 /**
  * Created by PhpStorm.
  * User: Todociber
- * Date: 16/04/2017
+ * Date: 17/04/2017
  * Time: 12:19 PM
  */
 
@@ -21,7 +21,7 @@ class MigrationsController extends CI_Controller
 
         //this->migration->version(2)ejecutará el método up de
         //las migraciones 001 y 002 y el método down de las superiores
-        if(!$this->migration->version(2)){
+        if(!$this->migration->version(13)){
             echo "error";
         }else{
             echo "success";

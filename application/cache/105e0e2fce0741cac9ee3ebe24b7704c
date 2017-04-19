@@ -16,6 +16,14 @@
 
     </div>
 <?php endif; ?>
+<?php if(!empty(validation_errors())): ?>
+
+    <div class="alert alert-error">
+        <a href="#" class="close" data-dismiss="alert">&times;</a>
+        <?php echo validation_errors(); ?>
+
+    </div>
+<?php endif; ?>
 
 
 <?php if(!empty($_SESSION['warning'])): ?>
@@ -42,13 +50,13 @@
     <?php $errors = $_SESSION['errors'];?>
     <div class="alert alert-error">
         <a href="#" class="close" data-dismiss="alert">&times;</a>
-<?php $__currentLoopData = $errors; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getFirstLoop(); ?>
 
 
-           <li><?php echo e($error); ?></li>
+
+           <?php echo $errors; ?>
 
 
-<?php endforeach; $__env->popLoop(); $loop = $__env->getFirstLoop(); ?>
+
 
     </div>
 <?php endif; ?>

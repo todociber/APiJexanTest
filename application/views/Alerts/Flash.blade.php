@@ -14,6 +14,13 @@
         <strong></strong>{{$_SESSION['error']}}
     </div>
 @endif
+@if(!empty(validation_errors()))
+
+    <div class="alert alert-error">
+        <a href="#" class="close" data-dismiss="alert">&times;</a>
+        {!! validation_errors() !!}
+    </div>
+@endif
 
 
 @if(!empty($_SESSION['warning']))
@@ -38,13 +45,12 @@
     <?php $errors = $_SESSION['errors'];?>
     <div class="alert alert-error">
         <a href="#" class="close" data-dismiss="alert">&times;</a>
-@foreach($errors  as $error)
 
 
-           <li>{{$error}}</li>
+
+           {!! $errors !!}
 
 
-@endforeach
 
     </div>
 @endif
