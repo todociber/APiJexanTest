@@ -9,7 +9,7 @@ class Blade
 {
     public function __construct()
     {
-        // define os diretórios onde estarão armazenadas as views e o cache
+
         $path = [
             APPPATH . 'views/'
         ];
@@ -21,11 +21,7 @@ class Blade
         $finder->addExtension('php');
         $this->factory = new \Xiaoler\Blade\Factory($engine, $finder);
     }
-    /*
-     * Os métodos criados a seguir servirão para que você possa utilizar os
-     * recursos de carregamento das views usando, por exemplo,
-     * $this->blade->view()
-     */
+
 
     public function view($path, $vars = [])
     {

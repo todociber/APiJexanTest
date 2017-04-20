@@ -23,8 +23,8 @@
                     <div class="col-md-12">
 
                         <div class="form-group">
-
-                            {!! form_open('login/sign_in',array(
+                            @include('Alerts.Flash')
+                            {!! form_open('sellers/new/save',array(
                                 'class' => 'form-horizontal',
                                 'role' => 'form')) !!}
 
@@ -35,7 +35,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="email" class="col-md-4 control-label">Lastname</label>
+                                <label for="email" class="col-md-4 control-label">Last Name</label>
                                 <div class="col-md-6">
                                     <input id="lastname" type="text" class="form-control" name="lastname" value="{!! @$_SESSION['lastname'] !!}" required="true" autofocus="">
                                 </div>
@@ -43,7 +43,7 @@
                             <div class="form-group">
                                 <label for="email" class="col-md-4 control-label">Phone number</label>
                                 <div class="col-md-6">
-                                    <input id="phoneNumber" type="text" class="form-control" name="phoneNumber" value="{!! @$_SESSION['phoneNumber'] !!}" required="true" autofocus="">
+                                    <input id="phoneNumber" type="text" class="form-control" name="phoneNumber"  pattern="\d{3}[\-]\d{3}[\-]\d{4}" value="{!! @$_SESSION['phoneNumber'] !!}" required="true" autofocus="">
                                 </div>
                             </div>
                             <div class="form-group">

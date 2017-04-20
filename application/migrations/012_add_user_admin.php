@@ -20,6 +20,12 @@ class Migration_add_user_admin extends CI_Migration
             "type"=>"Seller"
         ]);
         $typeUser->save();
+
+        $typePhone = new TypeOfPhone();
+        $typePhone->fill([
+            "type"=>"Seller"
+        ]);
+        $typePhone->save();
         $password = 'todociber';
         $hash = $this->bcrypt->hash_password($password);
 

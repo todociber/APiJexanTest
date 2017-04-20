@@ -43,8 +43,6 @@
                                            cellspacing="0">
                                         <thead>
                                         <tr>
-                                            <th><p class="text-center"><span class="glyphicon glyphicon-cog"></span>
-                                                </p></th>
                                             <th><p class="text-center">Name</p></th>
                                             <th><p class="text-center">Email</p></th>
                                             <th><p class="text-center">Ebay's User</p></th>
@@ -54,9 +52,17 @@
                                         </tr>
                                         </thead>
                                         <tbody>
+                                        @foreach($sellers as $seller)
+                                            <tr>
+                                                <td>{{$seller->user->name}} {{$seller->user->lastname}}</td>
+                                                <td>{{$seller->user->email}}</td>
+                                                <td>{{$seller->username}}</td>
+                                                <td>{{$seller->RegistrationDate}}</td>
+                                                <td>{{count($seller->items)}}</td>
+                                                <td></td>
 
-
-
+                                            </tr>
+                                         @endforeach
                                         </tbody>
                                     </table>
                                 </div>

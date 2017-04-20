@@ -101,7 +101,7 @@ $db['default'] = array(
 
 );
 
-$db['prueba'] = array(
+$db['test'] = array(
     'dsn'	=> '',
     'hostname' => 'localhost',
     'username' => 'root',

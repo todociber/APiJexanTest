@@ -14,6 +14,8 @@ class Login_controller extends CI_Controller
     {
         parent::__construct();
         $this->load->library('blade');
+        $authUser = new AuthUser();
+        $authUser->redirector();
     }
 
     public function index(){
@@ -28,8 +30,6 @@ class Login_controller extends CI_Controller
 
         if ($this->form_validation->run() == FALSE)
         {
-
-
             $this->session->set_flashdata('email',$this->input->post('email'));
             $this->session->set_flashdata('errors', validation_errors());
            redirect('login');
@@ -39,12 +39,17 @@ class Login_controller extends CI_Controller
             $email  = $this->input->post('email');
             $password = $this->input->post('password');
             $user = User::where('email',$email)->first();
-
             if ($this->bcrypt->check_password($password, $user->password))
             {
-                $session_data = $this->session->userdata($user->id);
-                $data['username'] = $session_data['username'];
-                echo "OK";
+                $datasession = array(
+                    'user_id'  => $user->id,
+                    'user_type' => $user->type_user_id
+                );
+                $this->session->set_userdata($datasession);
+                if($user->type_user_id==1){
+                    redirect('sellers');
+                }
+                echo "OK".var_dump($this->session->userdata('user_type'));
             }
             else
             {
@@ -54,14 +59,14 @@ class Login_controller extends CI_Controller
         }
     }
 
-
     public function reset_password(){
         $this->blade->view('ResetPassword',compact(validation_errors()));
     }
 
     public function token($token){
         $token = TokensUser::where('token',$token)->first();
-        if(count($token)==0){
+        if(count($token)==0)
+        {
             $this->session->set_flashdata('errors', "Incorrect data");
             redirect('login');
         }
@@ -79,7 +84,8 @@ class Login_controller extends CI_Controller
             redirect('login/token/'.$token);
         }
         $token = TokensUser::where('token',$token)->first();
-        if(count($token)!=0){
+        if(count($token)!=0)
+        {
             $user = User::find($token->users_id);
             $password = $this->input->post('password');
             $hash = $this->bcrypt->hash_password($password);
@@ -93,7 +99,8 @@ class Login_controller extends CI_Controller
             }
             $this->session->set_flashdata('info', "Password Challenge");
             redirect('login');
-        }else{
+        }else
+        {
             $this->session->set_flashdata('error', "Invalid Token");
             redirect('login');
         }
@@ -109,14 +116,15 @@ class Login_controller extends CI_Controller
             $this->session->set_flashdata('errors', validation_errors());
             redirect('login/reset_password');
         }
-        $token = $this->token_generator();
+        $tokenGenerator = new Token_generator();
+        $token = $tokenGenerator->tokens_generator();
         $email  = $this->input->post('email');
         $usuario = User::where('email',$email)->first();
-        if($usuario->id!=NULL){
-
-
+        if($usuario->id!=NULL)
+        {
             $emailSend= $this->send_email($usuario->email,$usuario->name,'Reset Password',$token);
-            if($emailSend){
+            if($emailSend)
+            {
                 $tokenSave = new TokensUser();
                 $tokenSave->fill([
                     "token" =>$token,
@@ -125,7 +133,9 @@ class Login_controller extends CI_Controller
                 $tokenSave->save();
                 $this->session->set_flashdata('success', "Successfully Sent Email");
                 redirect('login/reset_password');
-            }else{
+            }
+            else
+             {
                 $this->session->set_flashdata('error', "Error Sent Email");
                 redirect('login/reset_password');
             }
@@ -135,29 +145,6 @@ class Login_controller extends CI_Controller
             $this->session->set_flashdata('error', "Invalid Email");
             redirect('login/reset_password');
         }
-    }
-
-    private function token_generator()
-    {
-        //Se define una cadena de caractares. Te recomiendo que uses esta.
-        $cadena = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
-        //Obtenemos la longitud de la cadena de caracteres
-        $longitudCadena = strlen($cadena);
-
-        //Se define la variable que va a contener la contraseña
-        $pass = "";
-        //Se define la longitud de la contraseña, en mi caso 50, pero puedes poner la longitud que quieras
-        $longitudPass = 100;
-
-        //Creamos la contraseña
-        for ($i = 1; $i <= $longitudPass; $i++) {
-            //Definimos numero aleatorio entre 0 y la longitud de la cadena de caracteres-1
-            $pos = rand(0, $longitudCadena - 1);
-
-            //Vamos formando la contraseña en cada iteraccion del bucle, añadiendo a la cadena $pass la letra correspondiente a la posicion $pos en la cadena de caracteres definida.
-            $pass .= substr($cadena, $pos, 1);
-        }
-        return $pass;
     }
 
     private function send_email($email,$nombre,$asunto,$token){
@@ -188,7 +175,7 @@ class Login_controller extends CI_Controller
         $mensaje = '<html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Enviando emails com a library nativa do CodeIgniter</title>
+    <title>Reset Password</title>
 </head>
 <body>
 <table cellspacing="0" cellpadding="0" border="0" width="100%">

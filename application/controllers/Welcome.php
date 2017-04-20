@@ -20,6 +20,10 @@ class Welcome extends CI_Controller {
 	 */
 	public function index()
 	{
-        redirect('login');
+	    $authCheck = new AuthUser();
+	    $authCheck->redirector();
+	    if(!$authCheck->AuthCheck()){
+	        redirect('login');
+        }
 	}
 }
