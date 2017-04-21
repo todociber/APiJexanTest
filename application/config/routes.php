@@ -63,4 +63,7 @@ $route['sellers/new']['get']='Sellers_controller/new_seller';
 $route['getZipcodes']['get']='Sellers_controller/get_zipcodes';
 $route['sellers/new/save']['post']='Sellers_controller/save_new_seller';
 $route['login/logout']['get']='Logout_Controller/logout';
+$route['sellers/details/(:num)']['get']='Sellers_controller/seller_details/$1';
+$route['sellers/edit/(:num)']['get']='Sellers_controller/seller_edit_view/$1';
+$route['sellers/edit/save/(:num)']['post']='Sellers_controller/save_seller_edit/$1';
 

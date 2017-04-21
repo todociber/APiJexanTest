@@ -5,11 +5,15 @@
  * User: Todociber
  * Date: 16/04/2017
  * Time: 11:32 AM
+ * Controller for options of login user or reset password lost
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 class Login_controller extends CI_Controller
 {
 
+    /**
+     * Login_controller constructor.
+     */
     public function __construct()
     {
         parent::__construct();
@@ -18,11 +22,17 @@ class Login_controller extends CI_Controller
         $authUser->redirector();
     }
 
+    /**
+     * returns view with for formulary Login
+     */
     public function index(){
 
         $this->blade->view('Login',compact(validation_errors()));
     }
 
+    /**
+     *  function for validate user data and Pass or redirect
+     */
     public function sign_in(){
 
         $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email');
@@ -59,10 +69,18 @@ class Login_controller extends CI_Controller
         }
     }
 
+    /**
+     * returns view for ResetPassword for email reset password
+     */
     public function reset_password(){
         $this->blade->view('ResetPassword',compact(validation_errors()));
     }
 
+    /**
+     * @param $token
+     * $token of user for change password
+     * validate token for user and return view for change password
+     */
     public function token($token){
         $token = TokensUser::where('token',$token)->first();
         if(count($token)==0)
@@ -73,6 +91,11 @@ class Login_controller extends CI_Controller
         $this->blade->view('ChangePassword',compact(validation_errors(),'token'));
     }
 
+    /**
+     * @param $token
+     * token of user for change password
+     * receives new password for user change
+     */
     public function token_change($token){
         $this->form_validation->set_rules('password', 'Password', 'required|min_length[6]');
         $this->form_validation->set_rules('passwordConfirm', 'Password Confirmation', 'required|matches[password]|min_length[6]');
@@ -108,6 +131,10 @@ class Login_controller extends CI_Controller
 
     }
 
+    /**
+     *receives request for change password
+     * Sending Email to User for Password Change
+     */
     public function generate_reset(){
         $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email');
         if ($this->form_validation->run() == FALSE)
@@ -147,7 +174,15 @@ class Login_controller extends CI_Controller
         }
     }
 
-    private function send_email($email,$nombre,$asunto,$token){
+
+    /**
+     * @param $email = Destination Email Address
+     * @param $name = Name of user in the Email
+     * @param $topic = Topic for Email
+     * @param $token = Token for reset Password
+     * @return bool = if true send Succseful or false en case contrary
+     */
+    private function send_email($email, $name, $topic, $token){
 
         $this->load->library('email');
 
@@ -155,24 +190,16 @@ class Login_controller extends CI_Controller
         $config['protocol'] = 'smtp';
         $config['smtp_host'] = 'ssl://smtp.gmail.com';
         $config['smtp_port'] = '465';
-
-
-
         $config["smtp_user"] = 'comentario.csjb@gmail.com';
-
         $config["smtp_pass"] = 'c0m3nt4r105';
-
         $config['mailtype'] = 'html';
-
         $config['charset'] = 'utf-8';
-
         $this->email->initialize($config);
         $this->email->set_newline("\r\n");
         $this->email->from('comentario.csjb@gmail.com', 'Alexander Dominguez');
-
-        $this->email->to($email, $nombre);
-        $this->email->subject($asunto);
-        $mensaje = '<html>
+        $this->email->to($email, $name);
+        $this->email->subject($topic);
+        $messaje = '<html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Reset Password</title>
@@ -193,7 +220,7 @@ class Login_controller extends CI_Controller
         <td bgcolor="#FFFFFF" align="center">
             <table width="650px" cellspacing="0" cellpadding="3" class="container">
                 <br>
-                    <td><h2><b>'. $nombre.'</b></h2></td></br>
+                    <td><h2><b>'. $name.'</b></h2></td></br>
                     <p> With the following link you can reset your password</p></br>
                     <td colspan="4"><a class="brand" href="'.base_url().'login/token/'.$token.'">Reset Password</a></td>
                 </tr>
@@ -216,7 +243,7 @@ class Login_controller extends CI_Controller
 </body>
 </html>';
 
-        $this->email->message($mensaje);
+        $this->email->message($messaje);
         return  $this->email->send();
 
 

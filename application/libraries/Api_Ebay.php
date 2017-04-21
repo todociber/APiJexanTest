@@ -4,7 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * Created by PhpStorm.
  * User: Todociber
  * Date: 20/04/2017
- * Time: 12:06 AM
+ * Time: 12:06 PM
  */
 class Api_Ebay
 {
@@ -13,6 +13,11 @@ class Api_Ebay
     }
 
 
+    /**
+     * @param $seller = name of Seller to request information
+     * @return bool|mixed
+     * request information of profile Ebay for name Seller and return an Array or Boolean if dead
+     */
     public function get_profile_seller($seller){
         $ch = curl_init("http://open.api.ebay.com/getShopping?callname=GetUserProfile&responseencoding=JSON&appid=Alexande-TestJexa-PRD-008f655c9-0e4aab30&UserID=".$seller."&version=981");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

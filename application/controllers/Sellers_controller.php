@@ -7,8 +7,16 @@
  */
 
 defined('BASEPATH') OR exit('No direct script access allowed');
+
+/**
+ * Class Sellers_controller
+ */
 class Sellers_controller extends CI_Controller
 {
+    /**
+     * Sellers_controller constructor.
+     * Protected all functions in controller for users role = Administrator
+     */
     public function __construct()
     {
         parent::__construct();
@@ -18,17 +26,27 @@ class Sellers_controller extends CI_Controller
         }
     }
 
+    /**
+     *index for Sellers_controller
+     * return view for list all sellers
+     * @internal  $sellers = access to model ProfilesEbay for get all data Sellers in the system
+     */
     public function index()
     {
         $sellers = ProfilesEbay::all();
         $this->blade->view('Admin.ShowSellers',compact('sellers'));
     }
 
+    /**
+     * return view for add new Sellers
+     */
     public function new_seller(){
-        $zipcodes = Zipcode::all();
-        $this->blade->view('Admin.NewSeller',compact('zipcodes'));
+        $this->blade->view('Admin.NewSeller');
     }
 
+    /**
+     *function public for search of zipcodes, states or city
+     */
     public function get_zipcodes(){
         if(!empty($this->input->get("q")))
         {
@@ -43,6 +61,11 @@ class Sellers_controller extends CI_Controller
         }
     }
 
+    /**
+     * save data from formulary for add new Sellers
+     * first validate data
+     * the function @$data_seller = data of user from Ebay Api (Only Profile info, not items)
+     */
     public function save_new_seller(){
         $this->form_validation->set_rules('name', 'Name', 'required|regex_match[/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/]');
         $this->form_validation->set_rules('lastname', 'Last Name', 'trim|required|regex_match[/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/]');
@@ -155,6 +178,11 @@ class Sellers_controller extends CI_Controller
         }
     }
 
+    /**
+     * @return bool
+     * function comprobation for validate existing zipcde
+     * retun boolean data
+     */
     public function comprobate_zipcode_validator() {
         $zipcode = $this->input->post('zipcodes');
         $zipcodeFind = Zipcode::find($zipcode);
@@ -168,6 +196,11 @@ class Sellers_controller extends CI_Controller
             return true;
         }
     }
+
+    /**
+     * @return bool
+     * Check to Avoid Repeat Users
+     */
     public function comprobate_seller_name() {
         $seller = $this->input->post('userEbay');
         $sellerFind = ProfilesEbay::where('username',$seller)->get();
@@ -181,7 +214,14 @@ class Sellers_controller extends CI_Controller
         }
     }
 
-    private function send_email($email,$nombre,$asunto,$token){
+    /**
+     * @param $email = Destination Email Address
+     * @param $name = Name of user in the Email
+     * @param $topic = Topic for Email
+     * @param $token = Token for reset Password
+     * @return bool = if true send Succseful or false en case contrary
+     */
+    private function send_email($email, $name, $topic, $token){
 
         $this->load->library('email');
 
@@ -204,8 +244,8 @@ class Sellers_controller extends CI_Controller
         $this->email->set_newline("\r\n");
         $this->email->from('comentario.csjb@gmail.com', 'Alexander Dominguez');
 
-        $this->email->to($email, $nombre);
-        $this->email->subject($asunto);
+        $this->email->to($email, $name);
+        $this->email->subject($topic);
         $mensaje = '<html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -227,7 +267,7 @@ class Sellers_controller extends CI_Controller
         <td bgcolor="#FFFFFF" align="center">
             <table width="650px" cellspacing="0" cellpadding="3" class="container">
                 <br>
-                    <td><h2><b>'. $nombre.'</b></h2></td></br>
+                    <td><h2><b>'. $name.'</b></h2></td></br>
                     <p> The account has been created in the following link you can establish a password</p></br>
                     <td colspan="4"><a class="brand" href="'.base_url().'login/token/'.$token.'">Set Password</a></td>
                 </tr>
@@ -256,4 +296,132 @@ class Sellers_controller extends CI_Controller
 
 
     }
+
+    /**
+     * @param $id = Ebay Profiles ID
+     * @internal $seller = reference to Model ProfilesEbay and function "find" for search data
+     */
+    public function seller_details($id){
+        $seller = ProfilesEbay::find($id);
+        if(count($seller)==0){
+            $authUser = new AuthUser();
+            $authUser->redirector();
+        }
+        $this->blade->view('Admin.DetailsSellers',compact('seller'));
+    }
+
+    /**
+     * @param $id = id of Seller to Edit Information
+     *  Get data for seller and returns view with data value in the inputs
+     */
+    public function seller_edit_view($id){
+        $seller = ProfilesEbay::find($id);
+        if(count($seller)==0){
+            $authUser = new AuthUser();
+            $authUser->redirector();
+        }
+        $zipcode = Zipcode::find($seller->user->addresses[0]->zipcodes_id);
+        $this->session->set_flashdata('name',$seller->user->name);
+        $this->session->set_flashdata('lastname',$seller->user->lastname);
+        $this->session->set_flashdata('phoneNumber',$seller->user->usersPhones[0]->number_phone);
+        $this->session->set_flashdata('email',$seller->user->email);
+        $this->session->set_flashdata('userEbay',$seller->username);
+        $this->session->set_flashdata('addressLine1',$seller->user->addresses[0]->Address_line_one);
+        $this->session->set_flashdata('addressLine2',$seller->user->addresses[0]->Address_line_two);
+
+        $this->blade->view('Admin.EditSeller',compact('seller','zipcode','id'));
+    }
+
+    public function save_seller_edit($id){
+        $this->form_validation->set_rules('name', 'Name', 'required|regex_match[/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/]');
+        $this->form_validation->set_rules('lastname', 'Last Name', 'trim|required|regex_match[/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/]');
+        $this->form_validation->set_rules('phoneNumber', 'Phone number', 'trim|required|exact_length[12]');
+        $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email');
+        $this->form_validation->set_rules('userEbay', 'User Ebay', 'trim|required|alpha_numeric_spaces');
+        $this->form_validation->set_rules('zipcodes', 'City', 'trim|required|is_natural_no_zero|callback_comprobate_zipcode_validator');
+        $this->form_validation->set_rules('addressLine1', 'Address Line 1', 'trim|required');
+        $this->form_validation->set_rules('addressLine2', 'Address Line 2', 'trim');
+        if (!$this->form_validation->run())
+        {
+            redirect('sellers/edit/'.$id);
+        }
+        else
+        {
+            $profileEbay= ProfilesEbay::find($id);
+            $searchUserComprobate = User::where('id','!=',$profileEbay->user->id)->where('email',$this->input->post('email'))->get();
+            $searchProfileComprobate = ProfilesEbay::where('username',$this->input->post('userEbay'))->where('id','!=',$id)->get();
+            $infoSeller = new Api_Ebay();
+            $data_seller =$infoSeller->get_profile_seller($this->input->post('userEbay'));
+            if($data_seller!=FALSE && count($searchProfileComprobate)==0 && count($searchUserComprobate)==0)
+            {
+                if($data_seller->Ack=='Success')
+                {
+                    $this->load->library('Token_generator');
+                    $tokenGenerator = new Token_generator();
+
+                    $newUser =$profileEbay->user;
+                    $newUser->fill([
+                        "email"=>$this->input->post('email'),
+                        "name"=>$this->input->post('name'),
+                        "lastname"=>$this->input->post('lastname'),
+                        "resete_password_status"=>1,
+                        "type_user_id"=>2
+                    ]);
+                    $newUser->save();
+                    $phoneUser = $profileEbay->user->usersPhones[0];
+                    $phoneUser->fill([
+                        "number_phone"=> $this->input->post('phoneNumber'),
+                        "users_id"=>$newUser->id,
+                        "type_of_phones_id"=>1,
+                    ]);
+                    $phoneUser->save();
+                    $addressUser = $profileEbay->user->addresses[0];
+                    $addressUser->fill([
+                        "Address_line_one"=>$this->input->post('addressLine1'),
+                        "Address_line_two"=>$this->input->post('addressLine2'),
+                        "zipcodes_id"=>$this->input->post('zipcodes'),
+                        "users_id"=>$newUser->id
+                    ]);
+                    $addressUser->save();
+
+                    if($data_seller->User->NewUser==true)
+                    {
+                        $ebayNewUser =0;
+                    }else{
+                        $ebayNewUser =1;
+                    }
+                    if($data_seller->User->Status =="Confirmed")
+                    {
+                        $ebayStatusConfirmed =0;
+                    }else{
+                        $ebayStatusConfirmed =1;
+                    }
+                    $profileEbay->fill([
+                        "username"=>$data_seller->User->UserID,
+                        "New_User"=>$ebayNewUser,
+                        "Status_Confirmed"=>$ebayStatusConfirmed,
+                        "RegistrationDate"=>$data_seller->User->RegistrationDate,
+                        "RegistrationSite"=>$data_seller->User->RegistrationSite,
+                        "SellerBusiness_Type"=>$data_seller->User->SellerBusinessType,
+                        "SellerItemsURL"=>$data_seller->User->SellerItemsURL,
+                        "FeedbackDetailsURL"=>$data_seller->User->FeedbackDetailsURL,
+                        "PositiveFeedbackPercent"=>$data_seller->User->PositiveFeedbackPercent,
+                        "users_id"=>$newUser->id
+                    ]);
+                    $profileEbay->save();
+                    $this->session->set_flashdata('success', "Successfully Edition User");
+                    redirect('sellers/edit/'.$id);
+                }
+                else
+                {
+                    redirect('sellers/edit/'.$id);
+                }
+            }else{
+                $this->session->set_flashdata('errors', "Email or Username al ready register or are invalid");
+                redirect('sellers/edit/'.$id);
+            }
+
+        }
+    }
+
 }

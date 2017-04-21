@@ -12,6 +12,11 @@ class AuthUser
     {
 
     }
+
+    /**
+     * @return bool
+     * return if user is Auth or not
+     */
     public function AuthCheck(){
         $CI = & get_instance();
         $usuarios = $CI->session->userdata('user_id');
@@ -27,6 +32,10 @@ class AuthUser
         $CI->session->userdata('user_id');
     }
 
+    /**
+     * @return bool
+     * return true if users singin is an Admin of system
+     */
     public function is_admin(){
         $CI = & get_instance();
         $usuarios = $CI->session->userdata('user_type');
@@ -38,6 +47,9 @@ class AuthUser
     }
 
 
+    /**
+     *Depending on the role of the user, a default redirection is assigned
+     */
     public function redirector(){
         $CI = & get_instance();
         $usuarios = $CI->session->userdata('user_type');

@@ -59,7 +59,14 @@
                                                 <td>{{$seller->username}}</td>
                                                 <td>{{$seller->RegistrationDate}}</td>
                                                 <td>{{count($seller->items)}}</td>
-                                                <td></td>
+                                                <td>
+                                                    <a class="btn btn-success" href="{{base_url()}}sellers/details/{{$seller->id}}">
+                                                        Details Seller
+                                                    </a>
+                                                    <a class="btn btn-warning" href="{{base_url()}}sellers/edit/{{$seller->id}}">
+                                                        Edit Seller
+                                                    </a>
+                                                </td>
 
                                             </tr>
                                          @endforeach
