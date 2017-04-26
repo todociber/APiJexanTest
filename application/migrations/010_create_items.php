@@ -10,9 +10,7 @@ class Migration_create_items extends CI_Migration
 {
     public function up()
     {
-        //creamos la estructura de una tabla con un
-        //id autoincremental, un campo varchar para el username
-        //y otro para el passwords también varchar
+
         $this->dbforge->add_field(
             array(
                 "id"		=>		array(
@@ -46,17 +44,11 @@ class Migration_create_items extends CI_Migration
                 ),
                 "viewItemURL" => array(
                     "type" => "VARCHAR",
-                    "constraint" => 100
+                    "constraint" => 500
                 ),
                 "paymentMethods_ebay_id" => array(
                     'type' => 'int',
                     'constraint' => 100,
-                    'unsigned' => TRUE,
-                    'null' => FALSE,
-                ),
-                "zipcodes_id" => array(
-                    'type' => 'int',
-                    'constraint' => 11,
                     'unsigned' => TRUE,
                     'null' => FALSE,
                 ),
@@ -77,12 +69,12 @@ class Migration_create_items extends CI_Migration
                     "constraint" => 100
                 ),
                 "bestOfferStatus" => array(
-                    "type" => "BOOLEAN",
-                    "default"=>0,
+                    "type" => "VARCHAR",
+                    "constraint" => 100
                 ),
                 "buyItNowStatus" => array(
-                    "type" => "BOOLEAN",
-                    "default"=>0,
+                    "type" => "VARCHAR",
+                    "constraint" => 100
                 ),
                 "itemscol" => array(
                     "type" => "VARCHAR",
@@ -101,8 +93,8 @@ class Migration_create_items extends CI_Migration
                     "constraint" => 100
                 ),
                 "gift" => array(
-                    "type" => "BOOLEAN",
-                    "default"=>0,
+                    "type" => "VARCHAR",
+                    "constraint" => 100
                 ),
                 "returnsStatus" => array(
                     "type" => "VARCHAR",
@@ -115,12 +107,12 @@ class Migration_create_items extends CI_Migration
                     'null' => FALSE,
                 ),
                 "isMultiVariationListingStatus" => array(
-                    "type" => "BOOLEAN",
-                    "default"=>0,
+                    "type" => "VARCHAR",
+                    "constraint" => 100
                 ),
                 "topRatedListingStatus" => array(
-                    "type" => "BOOLEAN",
-                    "default"=>0,
+                    "type" => "VARCHAR",
+                    "constraint" => 100
                 ),
                 "Profiles_Ebay_id" => array(
                     'type' => 'int',
@@ -145,15 +137,14 @@ class Migration_create_items extends CI_Migration
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (Profiles_Ebay_id) REFERENCES profiles_ebay(id)');
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (category_ebay_id) REFERENCES category_ebay(id)');
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (paymentMethods_ebay_id) REFERENCES paymentMethods_ebay(id)');
-        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (zipcodes_id) REFERENCES zipcodes(ID)');
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (conditions_id) REFERENCES conditions_ebay(id)');
-        $this->dbforge->add_key('id', TRUE);//establecemos id como primary_key
-        $this->dbforge->create_table('items');//creamos la tabla users
+        $this->dbforge->add_key('id', TRUE);
+        $this->dbforge->create_table('items');
     }
 
     public function down()
     {
-        //eliminamos la tabla users
+
         $this->dbforge->drop_table('items');
 
     }

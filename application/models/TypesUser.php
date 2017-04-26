@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 class TypesUser extends Model {
 
     /**
@@ -9,7 +10,7 @@ class TypesUser extends Model {
      */
     use SoftDeletes;
     protected $table = 'types_users';
-    protected $fillable = ['id', 'type'];
+    protected $fillable = ['id', 'type', 'deleted_at'];
     protected $dates = ['deleted_at'];
 
 

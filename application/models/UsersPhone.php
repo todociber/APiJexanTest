@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 class UsersPhone extends Model {
 
     /**
@@ -9,7 +10,7 @@ class UsersPhone extends Model {
      */
     use SoftDeletes;
     protected $table = 'users_phones';
-    protected $fillable = ['id', 'number_phone', 'users_id', 'type_of_phones_id', 'deleted_at'];
+    protected $fillable = ['id', 'number_phone', 'users_id','country_code','country_extension', 'type_of_phones_id', 'deleted_at'];
     protected $dates = ['deleted_at'];
 
 

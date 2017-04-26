@@ -132,4 +132,4 @@ $autoload['language'] = array();
 |
 |	$autoload['model'] = array('first_model' => 'first');
 */
-$autoload['model'] = array('Address','CategoryEbay','ConditionsEbay','Item','PaymentmethodsEbay','ProfilesEbay','TypeOfPhone','User','UsersPhone','Zipcode','TypesUser','TokensUser');
+$autoload['model'] = array('CategoryEbay','ConditionsEbay','Item','PaymentmethodsEbay','ProfilesEbay','TypeOfPhone','User','UsersPhone','AddressUser','City','Country','Region','TypesUser','TokensUser');

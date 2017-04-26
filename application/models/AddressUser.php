@@ -2,19 +2,20 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-class Address extends Model {
+
+class AddressUser extends Model {
 
     /**
      * Generated
      */
     use SoftDeletes;
-    protected $table = 'addresses';
-    protected $fillable = ['id', 'Address_line_one', 'Address_line_two', 'zipcodes_id', 'users_id', 'deleted_at'];
+    protected $table = 'address_user';
+    protected $fillable = ['id', 'Address_line_one', 'Address_line_two', 'zipcode', 'city_id', 'users_id', 'deleted_at'];
     protected $dates = ['deleted_at'];
 
 
-    public function zipcode() {
-        return $this->belongsTo(Zipcode::class, 'zipcodes_id', 'ID');
+    public function city() {
+        return $this->belongsTo(City::class, 'city_id', 'id');
     }
 
     public function user() {

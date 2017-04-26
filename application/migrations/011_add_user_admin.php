@@ -46,7 +46,7 @@ class Migration_add_user_admin extends CI_Migration
     public function down()
     {
 
-        $NuevoUsuario = User::find(1);
-        $NuevoUsuario->forceDelete();
+       $NuevoUsuario = User::find(1);
+       $NuevoUsuario->forceDelete();
     }
 }

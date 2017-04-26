@@ -1,16 +1,16 @@
 @extends('Layout.LayoutAdmin')
 
 @section('title')
-    <title>Sellers</title>
+    <title>Restore Sellers</title>
 
 @stop
 @section('NombrePantalla')
-    Sellers
+    Restore Sellers
 @stop
 @section('content')
     <div class="box box-primary">
         <div class="box-header with-border">
-            <h3 class="box-title">Sellers</h3>
+            <h3 class="box-title">Restore Sellers</h3>
         </div><!-- /.box-header -->
         <!-- form start -->
 
@@ -23,11 +23,8 @@
                     <div class="col-md-12">
 
                         <div class="form-group">
-                            <a class="btn btn-info "href="{{base_url()}}sellers/new">
-                                Add Seller
-                            </a>
-                            <a class="btn btn-github "href="{{base_url()}}sellers/restore">
-                                Restore Sellers
+                            <a class="btn btn-warning "href="{{base_url()}}sellers">
+                                Return
                             </a></br>
                             <div style="width: 100%; padding-top: 10px ;padding-left: 10px; border: 0px;">
                                 @include('Alerts.Flash')
@@ -53,29 +50,17 @@
                                                 <td>{{$seller->RegistrationDate}}</td>
                                                 <td>{{count($seller->items)}}</td>
                                                 <td>
-                                                    <a class="btn btn-success" href="{{base_url()}}sellers/details/{{$seller->id}}">
-                                                        Details Seller
-                                                    </a>
-                                                    <a class="btn btn-warning" href="{{base_url()}}sellers/edit/{{$seller->id}}">
-                                                        Edit Seller
-                                                    </a>
-                                                    </br>
-                                                    <a class="btn btn-linkedin" style="margin-top:5px" href="{{base_url()}}items/list/{{$seller->id}}">
-                                                        View items
-                                                    </a>
-                                                    {!! form_open('sellers/delete/'.$seller->id,array(
+                                                    {!! form_open('sellers/restore/'.$seller->id,array(
                                                     'class' => 'form-horizontal',
-                                                     'role' => 'form',
-                                                     'style'=>'margin-top: 5px')) !!}
+                                                     'role' => 'form')) !!}
                                                     <button type="submit" class="btn btn-danger">
-                                                        Delete Seller
+                                                        Restore Seller
                                                     </button>
                                                     {!! form_close() !!}
-
                                                 </td>
 
                                             </tr>
-                                         @endforeach
+                                        @endforeach
                                         </tbody>
                                     </table>
                                 </div>

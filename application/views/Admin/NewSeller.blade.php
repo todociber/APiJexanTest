@@ -26,7 +26,8 @@
                             @include('Alerts.Flash')
                             {!! form_open('sellers/new/save',array(
                                 'class' => 'form-horizontal',
-                                'role' => 'form')) !!}
+                                'role' => 'form',
+                                "id"=>"sellerForm")) !!}
 
                             <div class="form-group">
                                 <label for="email" class="col-md-4 control-label">Name</label>
@@ -40,10 +41,14 @@
                                     <input id="lastname" type="text" class="form-control" name="lastname" value="{!! @$_SESSION['lastname'] !!}" required="true" autofocus="">
                                 </div>
                             </div>
+
                             <div class="form-group">
                                 <label for="email" class="col-md-4 control-label">Phone number</label>
                                 <div class="col-md-6">
-                                    <input id="phoneNumber" type="text" class="form-control" name="phoneNumber"  pattern="\d{3}[\-]\d{3}[\-]\d{4}" value="{!! @$_SESSION['phoneNumber'] !!}" required="true" autofocus="">
+                                    <input id="phoneNumber" type="text" onchange="validator()"  class="form-control" name="phoneNumber"   required="true" autofocus="">
+                                    <input id="countryName" type="text" onchange=""  class="form-control" name="countryName" style="display: none" value="" required="true" autofocus="">
+                                    <input id="countryExtension" type="text" onchange=""  class="form-control" name="countryExtension" style="display: none" value="" required="true" autofocus="">
+                                    <label id="validation" title="test"></label>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -59,10 +64,44 @@
                                 </div>
                             </div>
                             <div class="form-group">
+
+                                <label for="email" class="col-md-4 control-label">Country</label>
+                                <div class="col-md-6">
+                                    <select name="country" id="country" onload="GetRegionsLoad(this.value)" onselect="GetRegionsLoad(this.value)" onchange="GetRegionsLoad(this.value)" class="js-example-basic-single" style="width: 100%">
+                                        <?php $count=0;?>
+                                        @foreach($countries as $country)
+                                            @if(isset($_SESSION['countryFind'])&& $_SESSION['countryFind']==$country->id)
+                                                <option value="{{$country->id}}" selected>{{$country->name}}</option>
+                                        @elseif($count==0)
+                                                <?php $count=1;?>
+                                                <option value="" selected>-- Select your country --</option>
+                                        @else
+                                            <option value="{{$country->id}}">{{$country->name}}</option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="divRegion" class="form-group add-Innactive" >
+                                <label class="col-md-4 control-label">Regions </label>
+                                    <div class="col-md-6">
+                                    <select name="regions" id="regions" onvolumechange="GetCityCountry(this.value)" onchange="GetCityCountry(this.value)"  class="js-example-basic-single" style="width: 100%">
+
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div id="divCity" class="form-group add-Innactive" >
+                                <label class="col-md-4 control-label">Cities </label>
+                                    <div class="col-md-6">
+                                    <select name="cities" id="cities" class="js-example-basic-single" style="width: 100%">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <label for="email" class="col-md-4 control-label">Zip Code</label>
                                 <div id ="divmunzipcodes" class="col-md-6">
-                                    <select name="zipcodes" id="zipcodes" class="js-example-basic-single" style="width: 100%">
-                                    </select>
+                                    <input id="zipcode" type="text" class="form-control" name="zipcode" value="{!! @$_SESSION['userEbay'] !!}" required="true" autofocus="">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -72,7 +111,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="email" class="col-md-4 control-label">Address Line 2</label>
+                                <label for="email" class="col-md-4 control-label">Address Line 2<h6>(optional)</h6></label>
                                 <div class="col-md-6">
                                     <input id="addressLine2" type="text" class="form-control" name="addressLine2" value="{!! @$_SESSION['addressLine2'] !!}"  autofocus="">
                                 </div>
@@ -81,7 +120,7 @@
                             <div class="form-group">
 
                                 <div class="col-md-6">
-                                    <button type="submit" class="btn btn-success">
+                                    <button type="submit" id="save" disabled="true" class="btn btn-success">
                                         Save
                                     </button>
                                 </div>

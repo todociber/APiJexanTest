@@ -6,9 +6,7 @@ class Migration_create_category_ebay extends CI_Migration
 {
     public function up()
     {
-        //creamos la estructura de una tabla con un
-        //id autoincremental, un campo varchar para el username
-        //y otro para el passwords también varchar
+
         $this->dbforge->add_field(
             array(
                 "id"		=>		array(
@@ -42,8 +40,8 @@ class Migration_create_category_ebay extends CI_Migration
             )
         );
 
-        $this->dbforge->add_key('id', TRUE);//establecemos id como primary_key
-        $this->dbforge->create_table('category_ebay');//creamos la tabla users
+        $this->dbforge->add_key('id', TRUE);
+        $this->dbforge->create_table('category_ebay');
     }
 
     public function down()

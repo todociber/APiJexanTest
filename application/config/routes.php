@@ -60,10 +60,23 @@ $route['login/token/(:any)']['get']='Login_controller/token/$1';
 $route['login/token/change/(:any)']['post']='Login_controller/token_change/$1';
 $route['sellers']['get']='Sellers_controller';
 $route['sellers/new']['get']='Sellers_controller/new_seller';
-$route['getZipcodes']['get']='Sellers_controller/get_zipcodes';
+$route['get_city_search']['get']='Sellers_controller/get_city_search';
 $route['sellers/new/save']['post']='Sellers_controller/save_new_seller';
 $route['login/logout']['get']='Logout_Controller/logout';
 $route['sellers/details/(:num)']['get']='Sellers_controller/seller_details/$1';
 $route['sellers/edit/(:num)']['get']='Sellers_controller/seller_edit_view/$1';
 $route['sellers/edit/save/(:num)']['post']='Sellers_controller/save_seller_edit/$1';
+$route['sellers/delete/(:num)']['post']='Sellers_controller/delete_seller/$1';
+$route['sellers/restore']['get']='Sellers_controller/list_restore_sellers';
+$route['sellers/restore/(:num)']['post']='Sellers_controller/restore_seller/$1';
+$route['items/getPage/(:num)']['get']='Items_controller/getItemPage/$1';
+$route['items/list/(:num)']['get']='Items_controller/show_items/$1';
+$route['items/update/(:num)']['post']='Sellers_controller/update_items_list/$1';
+$route['items/details/(:num)']['get']='Items_controller/items_details/$1';
 
+$route['myItems']['get']='Seller_user_controller/index';
+$route['myItems/details/(:num)']['get']='Seller_user_controller/items_details/$1';
+
+$route['get_regions/(:num)']['get']='Sellers_controller/get_regions/$1';
+$route['get_city/(:num)']['get']='Sellers_controller/get_city_regions/$1';
+$route['get_city/country/(:num)']['get']='Sellers_controller/get_city_countries/$1';

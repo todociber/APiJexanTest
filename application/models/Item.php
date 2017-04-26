@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 class Item extends Model {
 
     /**
@@ -9,7 +10,7 @@ class Item extends Model {
      */
     use SoftDeletes;
     protected $table = 'items';
-    protected $fillable = ['id', 'itemId', 'title', 'globalId', 'category_ebay_id', 'galleryURL', 'viewItemURL', 'paymentMethods_ebay_id', 'zipcodes_id', 'currentPrice', 'convertedCurrentPrice', 'sellingState', 'timeLeft', 'bestOfferStatus', 'buyItNowStatus', 'itemscol', 'startTime', 'endTime', 'listingType', 'gift', 'returnsStatus', 'conditions_id', 'isMultiVariationListingStatus', 'topRatedListingStatus', 'Profiles_Ebay_id', 'deleted_at'];
+    protected $fillable = ['id', 'itemId', 'title', 'globalId', 'category_ebay_id', 'galleryURL', 'viewItemURL', 'paymentMethods_ebay_id', 'currentPrice', 'convertedCurrentPrice', 'sellingState', 'timeLeft', 'bestOfferStatus', 'buyItNowStatus', 'itemscol', 'startTime', 'endTime', 'listingType', 'gift', 'returnsStatus', 'conditions_id', 'isMultiVariationListingStatus', 'topRatedListingStatus', 'Profiles_Ebay_id', 'deleted_at'];
     protected $dates = ['deleted_at'];
 
 
@@ -22,11 +23,7 @@ class Item extends Model {
     }
 
     public function paymentmethodsEbay() {
-        return $this->belongsTo(PaymentmethodsEbay::class, 'paymentMethods_ebay_id', 'id');
-    }
-
-    public function zipcode() {
-        return $this->belongsTo(Zipcode::class, 'zipcodes_id', 'ID');
+        return $this->belongsTo(aymentmethodsEbay::class, 'paymentMethods_ebay_id', 'id');
     }
 
     public function conditionsEbay() {

@@ -56,10 +56,15 @@ class Login_controller extends CI_Controller
                     'user_type' => $user->type_user_id
                 );
                 $this->session->set_userdata($datasession);
-                if($user->type_user_id==1){
+                if($user->type_user_id==1)
+                {
                     redirect('sellers');
                 }
-                echo "OK".var_dump($this->session->userdata('user_type'));
+                elseif ($user->type_user_id==2)
+                {
+                    redirect('myItems');
+                }
+
             }
             else
             {

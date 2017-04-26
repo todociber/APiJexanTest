@@ -45,6 +45,15 @@ class AuthUser
             return false;
         }
     }
+    public function is_seller(){
+        $CI = & get_instance();
+        $usuarios = $CI->session->userdata('user_type');
+        if($usuarios == 2){
+            return true;
+        }else{
+            return false;
+        }
+    }
 
 
     /**
@@ -55,8 +64,8 @@ class AuthUser
         $usuarios = $CI->session->userdata('user_type');
         if($usuarios == 1){
             redirect('sellers');
-        }elseif($usuarios==''){
-            //redirect('login/logout');
+        }elseif ($usuarios==2){
+            redirect('myItems');
         }
     }
 }
