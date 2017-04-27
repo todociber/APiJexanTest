@@ -8,17 +8,23 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 class Seller_user_controller extends CI_Controller
 {
+    /**
+     * Seller_user_controller constructor.
+     * Access is granted only to sellers
+     */
     public function __construct()
     {
         parent::__construct();
-        $authUser = new AuthUser();
-        $authUser = new AuthUser();
-        if(!$authUser->is_seller()){
+
+        if(!$this->authuser->is_seller()){
             redirect('login/logout');
         }
 
     }
 
+    /**
+     * return listing of all items for login seller
+     */
     public function index(){
         $user = User::find($this->session->userdata('user_id'));
         $id =$user->profilesEbays[0]->id;
@@ -26,8 +32,28 @@ class Seller_user_controller extends CI_Controller
         $this->blade->view('Sellers.items',compact('items','id'));
     }
 
+    /**
+     * @param $id = id item from local database
+     */
     public function items_details($id){
         $item = Item::find($id);
         $this->blade->view('Sellers.itemsDetails',compact('item'));
+    }
+
+    /**
+     * update all items for login seller
+     */
+    public function update_items_list(){
+        $user = User::find($this->session->userdata('user_id'));
+        $seller = ProfilesEbay::find($user->profilesEbays[0]->id);
+        if($this->api_ebay->get_items($seller->username,$seller->id))
+        {
+            $this->session->set_flashdata('success', "Update items successfully");
+        }
+        else
+        {
+            $this->session->set_flashdata('errors', "Error in Update items");
+        }
+        redirect('myItems');
     }
 }

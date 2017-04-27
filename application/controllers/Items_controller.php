@@ -12,8 +12,7 @@ class Items_controller extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $authUser = new AuthUser();
-        if(!$authUser->is_admin()){
+        if(!$this->authuser->is_admin()){
             redirect('login/logout');
         }
     }
@@ -28,20 +27,5 @@ class Items_controller extends CI_Controller
         $this->blade->view('Admin.itemsDetails',compact('item'));
     }
 
-    public function get_items(){
-        $apiEbay = new Api_Ebay();
-        $items = $apiEbay->get_items_for_seller("bestserviceguys","100","1");
-        if($items->paginationOutput->totalPages>1){
-            $items2= $apiEbay->get_items_for_seller("bestserviceguys","100","2");
-        }
 
-        echo $items->paginationOutput->totalPages;
-
-    }
-    public function getItemPage($id){
-        $apiEbay = new Api_Ebay();
-        $items = $apiEbay->get_items_for_seller("bestserviceguys","200",$id);
-
-        echo "page Number: ".$id."</br>";
-    }
 }

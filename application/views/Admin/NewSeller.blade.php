@@ -21,7 +21,9 @@
 
                 <div class="row">
                     <div class="col-md-12">
-
+                        <a class="btn btn-warning "href="{{base_url()}}sellers/">
+                            Return Sellers
+                        </a></br>
                         <div class="form-group">
                             @include('Alerts.Flash')
                             {!! form_open('sellers/new/save',array(

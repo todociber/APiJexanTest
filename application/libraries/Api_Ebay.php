@@ -9,10 +9,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Api_Ebay
 {
     private  $key_app = '';
+
     public function __construct()
     {
         global $key_app;
         $key_app='Alexande-TestJexa-PRD-008f655c9-0e4aab30';
+        $this->CI =& get_instance();
     }
         /**
      * @param $seller = name of Seller to request information
@@ -36,7 +38,13 @@ class Api_Ebay
         }
     }
 
-    public function get_items_for_seller($seller, $entiesPerPage, $pageNumber){
+    /**
+     * @param $seller
+     * @param $entiesPerPage
+     * @param $pageNumber
+     * @return mixed
+     */
+    private function get_items_for_seller($seller, $entiesPerPage, $pageNumber){
 
         define('XML_POST_URL', 'http://svcs.ebay.com/services/search/FindingService/v1');
         $ch = curl_init();
@@ -49,21 +57,29 @@ class Api_Ebay
         curl_close($ch);
         $json = $this->Parse($result);
         $datos = json_decode($json);
-
         return $datos;
 
     }
 
+    /**
+     * @param $xml= result for Api Ebay in XML
+     * @return string = result information in JSON format
+     */
     private function Parse ($xml) {
         $fileContents = str_replace(array("\n", "\r", "\t","@"), '', $xml);
         $fileContents = trim(str_replace('"', "'", $fileContents));
         $simpleXml = simplexml_load_string($fileContents);
         $json = json_encode($simpleXml);
-
         return $json;
     }
 
-    private function set_data_items($seller,$entries,$pageNumber){
+    /**
+     * @param $seller = Seller username from ebay
+     * @param $entries = Numbers of items per page
+     * @param $pageNumber = Number of page for Apply
+     * @return string = structure data for send ebay
+     */
+    private function set_data_items($seller, $entries, $pageNumber){
         $data ='
     <findItemsAdvancedRequest xmlns="http://www.ebay.com/marketplace/search/v1/services">
   <itemFilter>
@@ -80,6 +96,9 @@ class Api_Ebay
         return $data;
     }
 
+    /**
+     * @return array = headers format for send ebay
+     */
     private function set_headers_items(){
         global $key_app;
         $headers = array(
@@ -89,4 +108,105 @@ class Api_Ebay
         );
         return $headers;
     }
+
+    /**
+     * @param $seller = Seller username from Ebay
+     * @param $id = local id of Profile_Ebay table
+     * @internal $itemsExisting = deleting all old items for  this seller
+     * @return bool = Returns correct or incorrect execution
+     */
+    public function get_items($seller, $id){
+        $itemsEbay = $this->get_items_for_seller($seller,"100","1");
+        if($itemsEbay->ack=="Success")
+        {
+            $itemsExisting= Item::where('Profiles_Ebay_id',$id)->get();
+            foreach ($itemsExisting as $itemExisting)
+            {
+                $itemExisting->forceDelete();
+            }
+            $this->insert_items($itemsEbay,$id);
+            if($itemsEbay->paginationOutput->totalPages>1)
+            {
+                $itemsEbay = $this->api_ebay->get_items_for_seller($seller,"100","2");
+                if($itemsEbay->ack=="Success")
+                {
+                    $this->insert_items($itemsEbay,$id);
+                }
+            }
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    /**
+     * @param $itemsEbay  = items object from Api Ebay
+     * @param $id = local id of Profile_Ebay table
+     */
+    private function insert_items($itemsEbay, $id){
+        foreach ($itemsEbay->searchResult->item as $item)
+        {
+            $category = CategoryEbay::where('id_ebay',$item->primaryCategory->categoryId)->first();
+            if(count($category)==0)
+            {
+                $category= new CategoryEbay();
+                $category->fill([
+                    "id_ebay"=>$item->primaryCategory->categoryId,
+                    "name_ebay"=>$item->primaryCategory->categoryName
+                ]);
+                $category->save();
+            }
+            $paymentMethod = PaymentmethodsEbay::where('name_method',$item->paymentMethod)->first();
+            if(count($paymentMethod)==0)
+            {
+                $paymentMethod = new PaymentmethodsEbay();
+                $paymentMethod->fill([
+                    "name_method"=>$item->paymentMethod
+                ]);
+                $paymentMethod->save();
+            }
+            $conditions = ConditionsEbay::where('id_ebay',$item->condition->conditionId)->first();
+            if(count($conditions)==0)
+            {
+                $conditions = new ConditionsEbay();
+                $conditions->fill([
+                    "id_ebay"=>$item->condition->conditionId,
+                    "name"=>$item->condition->conditionDisplayName
+                ]);
+                $conditions->save();
+            }
+            $saveItem = new Item();
+            $saveItem->fill([
+                "itemId"                        =>  $item->itemId,
+                "title"                         =>  $item->title,
+                "globalId"                      =>  $item->globalId,
+                "category_ebay_id"              =>  $category->id,
+                "galleryURL"                    =>  $item->galleryURL,
+                "viewItemURL"                   =>  $item->viewItemURL,
+                "paymentMethods_ebay_id"        =>  $paymentMethod->id,
+                "currentPrice"                  =>  $item->sellingStatus->currentPrice,
+                "convertedCurrentPrice"         =>  $item->sellingStatus->convertedCurrentPrice,
+                "sellingState"                  =>  $item->sellingStatus->sellingState,
+                "timeLeft"                      =>  $item->sellingStatus->timeLeft,
+                "bestOfferStatus"               =>  $item->listingInfo->bestOfferEnabled,
+                "buyItNowStatus"                =>  $item->listingInfo->buyItNowAvailable,
+                "itemscol"                      =>  $item->location,
+                "startTime"                     =>  $item->listingInfo->startTime,
+                "endTime"                       =>  $item->listingInfo->endTime,
+                "listingType"                   =>  $item->listingInfo->listingType,
+                "gift"                          =>  $item->listingInfo->gift,
+                "returnsStatus"                 =>  $item->returnsAccepted,
+                "conditions_id"                 =>  $conditions->id,
+                "isMultiVariationListingStatus" =>  $item->isMultiVariationListing,
+                "topRatedListingStatus"         =>  $item->topRatedListing,
+                "Profiles_Ebay_id"              =>  $id,
+            ]);
+            $saveItem->save();
+        }
+
+
+    }
+
 }

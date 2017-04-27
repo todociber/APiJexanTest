@@ -9,7 +9,7 @@ class PaymentmethodsEbay extends Model {
      * Generated
      */
     use SoftDeletes;
-    protected $table = 'paymentmethods_ebay';
+    protected $table = 'paymentMethods_ebay';
     protected $fillable = ['id', 'name_method', 'deleted_at'];
     protected $dates = ['deleted_at'];
 

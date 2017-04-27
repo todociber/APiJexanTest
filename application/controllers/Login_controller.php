@@ -18,8 +18,7 @@ class Login_controller extends CI_Controller
     {
         parent::__construct();
         $this->load->library('blade');
-        $authUser = new AuthUser();
-        $authUser->redirector();
+        $this->authuser->redirector();
     }
 
     /**

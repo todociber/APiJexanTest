@@ -22,7 +22,7 @@
                 <div class="row">
 
                     <div class="col-md-12">
-                        {!! form_open('items/update/'.$id,array('class' => 'form-vertical','style'=>'margin-top: 5px','role' => 'form')) !!}<button type="submit" class="btn btn-bitbucket">Update List Items</button>{!! form_close() !!}
+                        {!! form_open('myItems/update',array('class' => 'form-vertical','style'=>'margin-top: 5px','role' => 'form')) !!}<button type="submit" class="btn btn-bitbucket">Update List Items</button>{!! form_close() !!}
 
                             <div style="width: 100%; padding-top: 10px ;padding-left: 10px; border: 0px;">
 

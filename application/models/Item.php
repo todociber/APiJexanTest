@@ -23,7 +23,7 @@ class Item extends Model {
     }
 
     public function paymentmethodsEbay() {
-        return $this->belongsTo(aymentmethodsEbay::class, 'paymentMethods_ebay_id', 'id');
+        return $this->belongsTo(paymentmethodsEbay::class, 'paymentMethods_ebay_id', 'id');
     }
 
     public function conditionsEbay() {

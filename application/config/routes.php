@@ -52,15 +52,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $route['default_controller'] = 'Welcome';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
+
+//login and reset password system
 $route['login']['get']='Login_controller';
 $route['login/sign_in']['post']='Login_controller/sign_in';
 $route['login/reset_password']='Login_controller/reset_password';
 $route['login/generate_reset']['post'] ='Login_controller/generate_reset';
 $route['login/token/(:any)']['get']='Login_controller/token/$1';
 $route['login/token/change/(:any)']['post']='Login_controller/token_change/$1';
+
+//Admin routes
 $route['sellers']['get']='Sellers_controller';
 $route['sellers/new']['get']='Sellers_controller/new_seller';
-$route['get_city_search']['get']='Sellers_controller/get_city_search';
 $route['sellers/new/save']['post']='Sellers_controller/save_new_seller';
 $route['login/logout']['get']='Logout_Controller/logout';
 $route['sellers/details/(:num)']['get']='Sellers_controller/seller_details/$1';
@@ -74,9 +77,12 @@ $route['items/list/(:num)']['get']='Items_controller/show_items/$1';
 $route['items/update/(:num)']['post']='Sellers_controller/update_items_list/$1';
 $route['items/details/(:num)']['get']='Items_controller/items_details/$1';
 
+//Seller routes
 $route['myItems']['get']='Seller_user_controller/index';
 $route['myItems/details/(:num)']['get']='Seller_user_controller/items_details/$1';
+$route['myItems/update']['post']='Seller_user_controller/update_items_list';
 
+//routes for formulary
 $route['get_regions/(:num)']['get']='Sellers_controller/get_regions/$1';
 $route['get_city/(:num)']['get']='Sellers_controller/get_city_regions/$1';
-$route['get_city/country/(:num)']['get']='Sellers_controller/get_city_countries/$1';
+

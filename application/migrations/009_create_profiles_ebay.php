@@ -50,7 +50,7 @@ class Migration_create_profiles_ebay extends CI_Migration
                 ),
                 "FeedbackDetailsURL" => array(
                     "type" => "VARCHAR",
-                    "constraint" => 100
+                    "constraint" => 500
                 ),
                 "PositiveFeedbackPercent" => array(
                     "type" => "VARCHAR",

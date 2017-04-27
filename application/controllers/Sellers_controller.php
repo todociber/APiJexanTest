@@ -20,8 +20,8 @@ class Sellers_controller extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $authUser = new AuthUser();
-        if(!$authUser->is_admin()){
+
+        if(!$this->authuser->is_admin()){
             redirect('login/logout');
         }
     }
@@ -46,19 +46,6 @@ class Sellers_controller extends CI_Controller
         $this->blade->view('Admin.NewSeller',compact('countries'));
     }
 
-    /**
-     *function public for search of zipcodes, states or city
-     */
-    public function get_city_search(){
-        if(!empty($this->input->get("q")))
-        {
-            $searchCity = $this->input->get("q");
-            $city = City::Where('name', 'like', '%' . $searchCity . '%')
-                ->selectRaw('name as text, id')->get();
-
-            echo json_encode($city);
-        }
-    }
 
     /**
      * save data from formulary for add new Sellers
@@ -170,7 +157,7 @@ class Sellers_controller extends CI_Controller
                     "users_id"=>$newUser->id
                 ]);
                 $profileEbay->save();
-                $this->get_items($profileEbay->username,$profileEbay->id);
+                $this->api_ebay->get_items($profileEbay->username,$profileEbay->id);
                 $this->send_email($newUser->email,$newUser->name,"Account Activate",$tokenUser->token);
                  $this->session->set_flashdata('success', "Successfully Registered User");
                  redirect('sellers/new');
@@ -191,6 +178,7 @@ class Sellers_controller extends CI_Controller
             $this->session->set_flashdata('zipcodes',$this->input->post('zipcode'));
             $this->session->set_flashdata('addressLine1',$this->input->post('addressLine1'));
             $this->session->set_flashdata('addressLine2',$this->input->post('addressLine2'));
+            $this->session->set_flashdata('errors', 'Users Ebay Invalid');
                  redirect('sellers/new');
              }
             }
@@ -215,6 +203,9 @@ class Sellers_controller extends CI_Controller
         }
     }
 
+    /**
+     * @return bool = Check if the country exists in the local database
+     */
     public function comprobate_country_id() {
         $country = $this->input->post('country');
         $countryFind = Country::where('id',$country)->get();
@@ -462,12 +453,27 @@ class Sellers_controller extends CI_Controller
                         "users_id"=>$newUser->id
                     ]);
                     $profileEbay->save();
-                    $this->get_items($profileEbay->username,$profileEbay->id);
+                    $this->api_ebay->get_items($profileEbay->username,$profileEbay->id);
                     $this->session->set_flashdata('success', "Successfully Edition User");
                     redirect('sellers/edit/'.$id);
                 }
                 else
                 {
+                    $countryFind = Country::where('id',$this->input->post('country'))->first();
+                    $this->session->set_flashdata('name',$this->input->post('name'));
+                    $this->session->set_flashdata('lastname',$this->input->post('lastname'));
+                    $this->session->set_flashdata('phoneNumber',$this->input->post('phoneNumber'));
+                    $this->session->set_flashdata('email',$this->input->post('email'));
+                    $this->session->set_flashdata('userEbay',$this->input->post('userEbay'));
+                    $this->session->set_flashdata('countryName',$this->input->post('countryName'));
+                    $this->session->set_flashdata('countryExtension',$this->input->post('countryExtension'));
+                    $this->session->set_flashdata('countryFind',$countryFind->id);
+                    $this->session->set_flashdata('cities',$this->input->post('cities'));
+                    $this->session->set_flashdata('regions',$this->input->post('regions'));
+                    $this->session->set_flashdata('zipcodes',$this->input->post('zipcode'));
+                    $this->session->set_flashdata('addressLine1',$this->input->post('addressLine1'));
+                    $this->session->set_flashdata('addressLine2',$this->input->post('addressLine2'));
+                    $this->session->set_flashdata('errors', "Email or Username al ready register or are invalid");
                     redirect('sellers/edit/'.$id);
                 }
             }else{
@@ -485,7 +491,6 @@ class Sellers_controller extends CI_Controller
                 $this->session->set_flashdata('zipcodes',$this->input->post('zipcode'));
                 $this->session->set_flashdata('addressLine1',$this->input->post('addressLine1'));
                 $this->session->set_flashdata('addressLine2',$this->input->post('addressLine2'));
-                $this->session->set_flashdata('errors', validation_errors());
                 $this->session->set_flashdata('errors', "Email or Username al ready register or are invalid");
                 redirect('sellers/edit/'.$id);
             }
@@ -555,99 +560,25 @@ class Sellers_controller extends CI_Controller
 
     }
 
+    /**
+     * @param $id = ProfilesEbay id for update yours items
+     */
     public function update_items_list($id){
         $seller = ProfilesEbay::find($id);
-        $this->get_items($seller->username,$seller->id);
-        $this->session->set_flashdata('success', "Update items successfully");
+        if($this->api_ebay->get_items($seller->username,$seller->id))
+        {
+            $this->session->set_flashdata('success', "Update items successfully");
+        }
+        else
+        {
+            $this->session->set_flashdata('errors', "Error in Update items");
+        }
         redirect('/items/list/'.$id);
     }
 
-    private function get_items($seller,$id){
-        $itemsEbay = $this->api_ebay->get_items_for_seller($seller,"100","1");
-        if($itemsEbay->ack=="Success")
-        {
-            $itemsExisting= Item::where('Profiles_Ebay_id',$id)->get();
-            foreach ($itemsExisting as $itemExisting)
-            {
-                $itemExisting->forceDelete();
-            }
-            $this->insert_items($itemsEbay,$id);
-            if($itemsEbay->paginationOutput->totalPages>1)
-            {
-                $itemsEbay = $this->api_ebay->get_items_for_seller($seller,"100","2");
-                if($itemsEbay->ack=="Success")
-                {
-                    $this->insert_items($itemsEbay,$id);
-                }
-            }
-        }
-    }
-
-    private function insert_items($itemsEbay,$id){
-            foreach ($itemsEbay->searchResult->item as $item)
-            {
-                $category = CategoryEbay::where('id_ebay',$item->primaryCategory->categoryId)->first();
-                if(count($category)==0)
-                {
-                    $category= new CategoryEbay();
-                    $category->fill([
-                        "id_ebay"=>$item->primaryCategory->categoryId,
-                        "name_ebay"=>$item->primaryCategory->categoryName
-                    ]);
-                    $category->save();
-                }
-                $paymentMethod = PaymentmethodsEbay::where('name_method',$item->paymentMethod)->first();
-                if(count($paymentMethod)==0)
-                {
-                    $paymentMethod = new PaymentmethodsEbay();
-                    $paymentMethod->fill([
-                        "name_method"=>$item->paymentMethod
-                    ]);
-                    $paymentMethod->save();
-                }
-                $conditions = ConditionsEbay::where('id_ebay',$item->condition->conditionId)->first();
-                if(count($conditions)==0)
-                {
-                    $conditions = new ConditionsEbay();
-                    $conditions->fill([
-                        "id_ebay"=>$item->condition->conditionId,
-                        "name"=>$item->condition->conditionDisplayName
-                    ]);
-                    $conditions->save();
-                }
-                $saveItem = new Item();
-                $saveItem->fill([
-                    "itemId"                        =>  $item->itemId,
-                    "title"                         =>  $item->title,
-                    "globalId"                      =>  $item->globalId,
-                    "category_ebay_id"              =>  $category->id,
-                    "galleryURL"                    =>  $item->galleryURL,
-                    "viewItemURL"                   =>  $item->viewItemURL,
-                    "paymentMethods_ebay_id"        =>  $paymentMethod->id,
-                    "currentPrice"                  =>  $item->sellingStatus->currentPrice,
-                    "convertedCurrentPrice"         =>  $item->sellingStatus->convertedCurrentPrice,
-                    "sellingState"                  =>  $item->sellingStatus->sellingState,
-                    "timeLeft"                      =>  $item->sellingStatus->timeLeft,
-                    "bestOfferStatus"               =>  $item->listingInfo->bestOfferEnabled,
-                    "buyItNowStatus"                =>  $item->listingInfo->buyItNowAvailable,
-                    "itemscol"                      =>  $item->location,
-                    "startTime"                     =>  $item->listingInfo->startTime,
-                    "endTime"                       =>  $item->listingInfo->endTime,
-                    "listingType"                   =>  $item->listingInfo->listingType,
-                    "gift"                          =>  $item->listingInfo->gift,
-                    "returnsStatus"                 =>  $item->returnsAccepted,
-                    "conditions_id"                 =>  $conditions->id,
-                    "isMultiVariationListingStatus" =>  $item->isMultiVariationListing,
-                    "topRatedListingStatus"         =>  $item->topRatedListing,
-                    "Profiles_Ebay_id"              =>  $id,
-                ]);
-                $saveItem->save();
-            }
-
-
-    }
-
-
+    /**
+     * @param $id = Country id for search regions
+     */
     public function get_regions($id){
 
         try {
@@ -668,6 +599,10 @@ class Sellers_controller extends CI_Controller
             echo json_encode(['error' => 'Error Conection'], 450);
         }
     }
+
+    /**
+     * @param $idRegion = Region id for search cities
+     */
     public function get_city_regions($idRegion){
 
         try {
@@ -689,24 +624,5 @@ class Sellers_controller extends CI_Controller
         }
     }
 
-    public function get_city_countries($idCountry){
 
-        try {
-
-
-            $citys = City::where('country_id',$idCountry)->select('name', 'id')->get();
-
-            if (count($citys) > 0) {
-
-                echo json_encode($citys, 200);
-
-            } else {
-
-                echo json_encode(['error' => 'Data not found'], 450);
-            }
-        } catch (Exception $e) {
-
-            echo json_encode(['error' => 'Error Conection'.$e], 450);
-        }
-    }
 }
