@@ -24,7 +24,8 @@ class Login_controller extends CI_Controller
     /**
      * returns view with for formulary Login
      */
-    public function index(){
+    public function index()
+    {
 
         $this->blade->view('Login',compact(validation_errors()));
     }
@@ -32,7 +33,8 @@ class Login_controller extends CI_Controller
     /**
      *  function for validate user data and Pass or redirect
      */
-    public function sign_in(){
+    public function sign_in()
+    {
 
         $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email');
         $this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[6]');
@@ -76,7 +78,8 @@ class Login_controller extends CI_Controller
     /**
      * returns view for ResetPassword for email reset password
      */
-    public function reset_password(){
+    public function reset_password()
+    {
         $this->blade->view('ResetPassword',compact(validation_errors()));
     }
 
@@ -85,7 +88,8 @@ class Login_controller extends CI_Controller
      * $token of user for change password
      * validate token for user and return view for change password
      */
-    public function token($token){
+    public function token($token)
+    {
         $token = TokensUser::where('token',$token)->first();
         if(count($token)==0)
         {
@@ -100,13 +104,13 @@ class Login_controller extends CI_Controller
      * token of user for change password
      * receives new password for user change
      */
-    public function token_change($token){
+    public function token_change($token)
+    {
         $this->form_validation->set_rules('password', 'Password', 'required|min_length[6]');
         $this->form_validation->set_rules('passwordConfirm', 'Password Confirmation', 'required|matches[password]|min_length[6]');
 
         if ($this->form_validation->run() == FALSE)
         {
-
             $this->session->set_flashdata('errors', validation_errors());
             redirect('login/token/'.$token);
         }
@@ -126,7 +130,8 @@ class Login_controller extends CI_Controller
             }
             $this->session->set_flashdata('info', "Password Challenge");
             redirect('login');
-        }else
+        }
+        else
         {
             $this->session->set_flashdata('error', "Invalid Token");
             redirect('login');
@@ -139,7 +144,8 @@ class Login_controller extends CI_Controller
      *receives request for change password
      * Sending Email to User for Password Change
      */
-    public function generate_reset(){
+    public function generate_reset()
+    {
         $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email');
         if ($this->form_validation->run() == FALSE)
         {
@@ -186,7 +192,8 @@ class Login_controller extends CI_Controller
      * @param $token = Token for reset Password
      * @return bool = if true send Succseful or false en case contrary
      */
-    private function send_email($email, $name, $topic, $token){
+    private function send_email($email, $name, $topic, $token)
+    {
 
         $this->load->library('email');
 

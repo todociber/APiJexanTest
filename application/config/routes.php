@@ -86,3 +86,6 @@ $route['myItems/update']['post']='Seller_user_controller/update_items_list';
 $route['get_regions/(:num)']['get']='Sellers_controller/get_regions/$1';
 $route['get_city/(:num)']['get']='Sellers_controller/get_city_regions/$1';
 
+//Profiles
+$route['Profile']['get']='ProfileController/profileAdmin';
+$route['MyProfile']['get']='ProfileController/profileSeller';

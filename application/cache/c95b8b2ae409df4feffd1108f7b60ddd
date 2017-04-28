@@ -112,6 +112,8 @@
 
                 <li><a href="<?php echo e(base_url()); ?>sellers"><i class="fa fa-circle-o text-yellow"></i>
                         <span>Sellers</span></a></li>
+                <li><a href="<?php echo e(base_url()); ?>Profile"><i class="fa fa-circle-o text-green"></i>
+                        <span>Profile</span></a></li>
                 <li><a href="<?php echo e(base_url()); ?>login/logout"><i class="fa fa-circle-o text-red"></i>
                         <span>Logout</span></a></li>
 

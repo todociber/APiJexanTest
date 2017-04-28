@@ -116,6 +116,7 @@ class Api_Ebay
      * @return bool = Returns correct or incorrect execution
      */
     public function get_items($seller, $id){
+        $this->CI =& get_instance();
         $itemsEbay = $this->get_items_for_seller($seller,"100","1");
         if($itemsEbay->ack=="Success")
         {
@@ -124,10 +125,15 @@ class Api_Ebay
             {
                 $itemExisting->forceDelete();
             }
-            $this->insert_items($itemsEbay,$id);
+            try{
+                $this->insert_items($itemsEbay,$id);
+            }catch (Exception $e){
+
+            }
+
             if($itemsEbay->paginationOutput->totalPages>1)
             {
-                $itemsEbay = $this->api_ebay->get_items_for_seller($seller,"100","2");
+                $itemsEbay = $this->get_items_for_seller($seller,"100","2");
                 if($itemsEbay->ack=="Success")
                 {
                     $this->insert_items($itemsEbay,$id);
@@ -148,62 +154,74 @@ class Api_Ebay
     private function insert_items($itemsEbay, $id){
         foreach ($itemsEbay->searchResult->item as $item)
         {
-            $category = CategoryEbay::where('id_ebay',$item->primaryCategory->categoryId)->first();
-            if(count($category)==0)
-            {
-                $category= new CategoryEbay();
-                $category->fill([
-                    "id_ebay"=>$item->primaryCategory->categoryId,
-                    "name_ebay"=>$item->primaryCategory->categoryName
+
+                $category = CategoryEbay::where('id_ebay',$item->primaryCategory->categoryId)->first();
+                if(count($category)==0)
+                {
+                    $category= new CategoryEbay();
+                    $category->fill([
+                        "id_ebay"=>$item->primaryCategory->categoryId,
+                        "name_ebay"=>$item->primaryCategory->categoryName
+                    ]);
+                    $category->save();
+                }
+                $paymentMethod = PaymentmethodsEbay::where('name_method',$item->paymentMethod)->first();
+                if(count($paymentMethod)==0)
+                {
+                    $paymentMethod = new PaymentmethodsEbay();
+                    $paymentMethod->fill([
+                        "name_method"=>$item->paymentMethod
+                    ]);
+                    $paymentMethod->save();
+                }
+                $conditions = ConditionsEbay::where('id_ebay',$item->condition->conditionId)->first();
+                if(count($conditions)==0 && $item->condition->conditionId!=NULL && $item->condition->conditionDisplayName !=NULL )
+                {
+                    $conditions = new ConditionsEbay();
+                    $conditions->fill([
+                        "id_ebay"=>$item->condition->conditionId,
+                        "name"=>$item->condition->conditionDisplayName
+                    ]);
+                    $conditions->save();
+                }
+                $saveItem = new Item();
+                $gallery ='none';
+                try{
+                    $gallery = $item->galleryURL;
+                }catch (Exception $e){
+                    $gallery = "none";
+                }
+                if($gallery ==NULL OR $gallery ==''){
+                    $gallery ="none";
+                }
+                $saveItem->fill([
+                    "itemId"                        =>  $item->itemId,
+                    "title"                         =>  $item->title,
+                    "globalId"                      =>  $item->globalId,
+                    "category_ebay_id"              =>  $category->id,
+                    "galleryURL"                    =>  $gallery,
+                    "viewItemURL"                   =>  $item->viewItemURL,
+                    "paymentMethods_ebay_id"        =>  $paymentMethod->id,
+                    "currentPrice"                  =>  $item->sellingStatus->currentPrice,
+                    "convertedCurrentPrice"         =>  $item->sellingStatus->convertedCurrentPrice,
+                    "sellingState"                  =>  $item->sellingStatus->sellingState,
+                    "timeLeft"                      =>  $item->sellingStatus->timeLeft,
+                    "bestOfferStatus"               =>  $item->listingInfo->bestOfferEnabled,
+                    "buyItNowStatus"                =>  $item->listingInfo->buyItNowAvailable,
+                    "itemscol"                      =>  $item->location,
+                    "startTime"                     =>  $item->listingInfo->startTime,
+                    "endTime"                       =>  $item->listingInfo->endTime,
+                    "listingType"                   =>  $item->listingInfo->listingType,
+                    "gift"                          =>  $item->listingInfo->gift,
+                    "returnsStatus"                 =>  $item->returnsAccepted,
+                    "conditions_id"                 =>  $conditions->id|| 1,
+                    "isMultiVariationListingStatus" =>  $item->isMultiVariationListing,
+                    "topRatedListingStatus"         =>  $item->topRatedListing,
+                    "Profiles_Ebay_id"              =>  $id,
                 ]);
-                $category->save();
-            }
-            $paymentMethod = PaymentmethodsEbay::where('name_method',$item->paymentMethod)->first();
-            if(count($paymentMethod)==0)
-            {
-                $paymentMethod = new PaymentmethodsEbay();
-                $paymentMethod->fill([
-                    "name_method"=>$item->paymentMethod
-                ]);
-                $paymentMethod->save();
-            }
-            $conditions = ConditionsEbay::where('id_ebay',$item->condition->conditionId)->first();
-            if(count($conditions)==0)
-            {
-                $conditions = new ConditionsEbay();
-                $conditions->fill([
-                    "id_ebay"=>$item->condition->conditionId,
-                    "name"=>$item->condition->conditionDisplayName
-                ]);
-                $conditions->save();
-            }
-            $saveItem = new Item();
-            $saveItem->fill([
-                "itemId"                        =>  $item->itemId,
-                "title"                         =>  $item->title,
-                "globalId"                      =>  $item->globalId,
-                "category_ebay_id"              =>  $category->id,
-                "galleryURL"                    =>  $item->galleryURL,
-                "viewItemURL"                   =>  $item->viewItemURL,
-                "paymentMethods_ebay_id"        =>  $paymentMethod->id,
-                "currentPrice"                  =>  $item->sellingStatus->currentPrice,
-                "convertedCurrentPrice"         =>  $item->sellingStatus->convertedCurrentPrice,
-                "sellingState"                  =>  $item->sellingStatus->sellingState,
-                "timeLeft"                      =>  $item->sellingStatus->timeLeft,
-                "bestOfferStatus"               =>  $item->listingInfo->bestOfferEnabled,
-                "buyItNowStatus"                =>  $item->listingInfo->buyItNowAvailable,
-                "itemscol"                      =>  $item->location,
-                "startTime"                     =>  $item->listingInfo->startTime,
-                "endTime"                       =>  $item->listingInfo->endTime,
-                "listingType"                   =>  $item->listingInfo->listingType,
-                "gift"                          =>  $item->listingInfo->gift,
-                "returnsStatus"                 =>  $item->returnsAccepted,
-                "conditions_id"                 =>  $conditions->id,
-                "isMultiVariationListingStatus" =>  $item->isMultiVariationListing,
-                "topRatedListingStatus"         =>  $item->topRatedListing,
-                "Profiles_Ebay_id"              =>  $id,
-            ]);
-            $saveItem->save();
+                $saveItem->save();
+
+
         }
 
 

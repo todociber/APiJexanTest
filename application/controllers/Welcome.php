@@ -20,9 +20,9 @@ class Welcome extends CI_Controller {
 	 */
 	public function index()
 	{
-
         $this->authuser->redirector();
-	    if(!$this->authuser->AuthCheck()){
+	    if(!$this->authuser->AuthCheck())
+	    {
 	        redirect('login');
         }
 	}

@@ -40,7 +40,8 @@ class Sellers_controller extends CI_Controller
     /**
      * return view for add new Sellers
      */
-    public function new_seller(){
+    public function new_seller()
+    {
 
         $countries = Country::orderBy('name','ASC')->get();
         $this->blade->view('Admin.NewSeller',compact('countries'));
@@ -52,7 +53,8 @@ class Sellers_controller extends CI_Controller
      * first validate data
      * the function @$data_seller = data of user from Ebay Api (Only Profile info, not items)
      */
-    public function save_new_seller(){
+    public function save_new_seller()
+    {
         $this->form_validation->set_rules('name', 'Name', 'required|regex_match[/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/]');
         $this->form_validation->set_rules('lastname', 'Last Name', 'trim|required|regex_match[/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/]');
         $this->form_validation->set_rules('phoneNumber', 'Phone number', 'trim|required');
@@ -190,7 +192,8 @@ class Sellers_controller extends CI_Controller
      * @return bool
      * Check to Avoid Repeat Users
      */
-    public function comprobate_seller_name() {
+    public function comprobate_seller_name()
+    {
         $seller = $this->input->post('userEbay');
         $sellerFind = ProfilesEbay::where('username',$seller)->get();
         if (count($sellerFind)>0)
@@ -206,7 +209,8 @@ class Sellers_controller extends CI_Controller
     /**
      * @return bool = Check if the country exists in the local database
      */
-    public function comprobate_country_id() {
+    public function comprobate_country_id()
+    {
         $country = $this->input->post('country');
         $countryFind = Country::where('id',$country)->get();
         if (count($countryFind)==0)
@@ -226,7 +230,8 @@ class Sellers_controller extends CI_Controller
      * @param $token = Token for reset Password
      * @return bool = if true send Succseful or false en case contrary
      */
-    private function send_email($email, $name, $topic, $token){
+    private function send_email($email, $name, $topic, $token)
+    {
 
         $this->load->library('email');
 
@@ -306,9 +311,11 @@ class Sellers_controller extends CI_Controller
      * @param $id = Ebay Profiles ID
      * @internal $seller = reference to Model ProfilesEbay and function "find" for search data
      */
-    public function seller_details($id){
+    public function seller_details($id)
+    {
         $seller = ProfilesEbay::find($id);
-        if(count($seller)==0){
+        if(count($seller)==0)
+        {
             $authUser = new AuthUser();
             $authUser->redirector();
         }
@@ -319,9 +326,11 @@ class Sellers_controller extends CI_Controller
      * @param $id = id of Seller to Edit Information
      *  Get data for seller and returns view with data value in the inputs
      */
-    public function seller_edit_view($id){
+    public function seller_edit_view($id)
+    {
         $seller = ProfilesEbay::find($id);
-        if(count($seller)==0){
+        if(count($seller)==0)
+        {
             $authUser = new AuthUser();
             $authUser->redirector();
         }
@@ -342,9 +351,6 @@ class Sellers_controller extends CI_Controller
             $this->session->set_flashdata('addressLine1',$seller->user->addressUsers[0]->Address_line_one);
             $this->session->set_flashdata('addressLine2',$seller->user->addressUsers[0]->Address_line_two);
         }
-
-
-
         $this->blade->view('Admin.EditSeller',compact('seller','countries','id'));
     }
 
@@ -354,7 +360,8 @@ class Sellers_controller extends CI_Controller
      * @internal $searchUserComprobate = check if other they have the same email
      *@internal  $searchProfileComprobate = check if other they have the same username
      */
-    public function save_seller_edit($id){
+    public function save_seller_edit($id)
+    {
 
         $this->form_validation->set_rules('country', 'Country', 'trim|required|callback_comprobate_country_id');
         $this->form_validation->set_rules('countryName', 'Phone number', 'trim|required');
@@ -526,7 +533,8 @@ class Sellers_controller extends CI_Controller
      *Function to list deleted sellers
      * @internal onlyTrashed = only register deleted
      */
-    public function list_restore_sellers(){
+    public function list_restore_sellers()
+    {
         $sellers = ProfilesEbay::onlyTrashed()->with(array('user'=>function ($query){
             $query->onlyTrashed();
         },'items'=>function($query){
@@ -538,7 +546,8 @@ class Sellers_controller extends CI_Controller
     /**
      * @param $id = Profiles Ebay id for restore register
      */
-    public function restore_seller($id){
+    public function restore_seller($id)
+    {
         $seller = ProfilesEbay::onlyTrashed()->with(array('user'=>function ($query){
             $query->onlyTrashed();
         },'items'=>function($query){
@@ -563,7 +572,8 @@ class Sellers_controller extends CI_Controller
     /**
      * @param $id = ProfilesEbay id for update yours items
      */
-    public function update_items_list($id){
+    public function update_items_list($id)
+    {
         $seller = ProfilesEbay::find($id);
         if($this->api_ebay->get_items($seller->username,$seller->id))
         {
@@ -579,23 +589,19 @@ class Sellers_controller extends CI_Controller
     /**
      * @param $id = Country id for search regions
      */
-    public function get_regions($id){
-
+    public function get_regions($id)
+    {
         try {
-
-
             $regions = Region::where('country_id',$id)->selectRaw('CONCAT(name, ", code: ", code) AS name, id')->orderBy('name','ASC')->get();
-
-            if (count($regions) > 0) {
-
+            if (count($regions) > 0)
+            {
                 echo json_encode($regions, 200);
-
-            } else {
-
+            }
+            else
+            {
                 echo json_encode(['error' => 'Data not found'], 450);
             }
         } catch (Exception $e) {
-
             echo json_encode(['error' => 'Error Conection'], 450);
         }
     }
@@ -603,23 +609,19 @@ class Sellers_controller extends CI_Controller
     /**
      * @param $idRegion = Region id for search cities
      */
-    public function get_city_regions($idRegion){
-
+    public function get_city_regions($idRegion)
+    {
         try {
-
-
             $citys = City::where('region_id',$idRegion)->select('name', 'id')->get();
-
-            if (count($citys) > 0) {
-
+            if (count($citys) > 0)
+            {
                 echo json_encode($citys, 200);
-
-            } else {
-
+            }
+            else
+            {
                 echo json_encode(['error' => 'Data not found'], 450);
             }
         } catch (Exception $e) {
-
             echo json_encode(['error' => 'Error Conection'.$e], 450);
         }
     }

@@ -13,7 +13,8 @@ class Logout_Controller extends CI_Controller
     /**
      *function for close session for users Signed
      */
-    public function logout(){
+    public function logout()
+    {
         $datasession = array(
             'user_id'  =>"",
             'user_type' =>""

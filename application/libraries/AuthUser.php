@@ -10,24 +10,30 @@ class AuthUser
 {
     public function __construct()
     {
-
+        $CI = & get_instance();
+        $this->CI =& get_instance();
     }
 
     /**
      * @return bool
      * return if user is Auth or not
      */
-    public function AuthCheck(){
+    public function AuthCheck()
+    {
         $CI = & get_instance();
         $usuarios = $CI->session->userdata('user_id');
-        if($usuarios != NULL){
+        if($usuarios != NULL)
+        {
             return true;
-        }else{
+        }
+        else
+        {
             return false;
         }
     }
 
-    public function Route_check_permission(){
+    public function Route_check_permission()
+    {
         $CI = & get_instance();
         $CI->session->userdata('user_id');
     }
@@ -37,13 +43,18 @@ class AuthUser
      * return true if users singin is an Admin of system
      */
     public function is_admin(){
-        $CI = & get_instance();
-        $usuarios = $CI->session->userdata('user_type');
-        if($usuarios == 1){
-            return true;
-        }else{
+        try{
+            $CI = & get_instance();
+            $usuarios = $CI->session->userdata('user_type');
+            if($usuarios == 1){
+                return true;
+            }else{
+                return false;
+            }
+        }catch (Exception $e){
             return false;
         }
+
     }
     public function is_seller(){
         $CI = & get_instance();

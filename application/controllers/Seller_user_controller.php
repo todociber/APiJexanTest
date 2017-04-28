@@ -25,7 +25,8 @@ class Seller_user_controller extends CI_Controller
     /**
      * return listing of all items for login seller
      */
-    public function index(){
+    public function index()
+    {
         $user = User::find($this->session->userdata('user_id'));
         $id =$user->profilesEbays[0]->id;
         $items = Item::where('Profiles_Ebay_id',$user->profilesEbays[0]->id)->get();
@@ -35,7 +36,8 @@ class Seller_user_controller extends CI_Controller
     /**
      * @param $id = id item from local database
      */
-    public function items_details($id){
+    public function items_details($id)
+    {
         $item = Item::find($id);
         $this->blade->view('Sellers.itemsDetails',compact('item'));
     }
@@ -43,7 +45,8 @@ class Seller_user_controller extends CI_Controller
     /**
      * update all items for login seller
      */
-    public function update_items_list(){
+    public function update_items_list()
+    {
         $user = User::find($this->session->userdata('user_id'));
         $seller = ProfilesEbay::find($user->profilesEbays[0]->id);
         if($this->api_ebay->get_items($seller->username,$seller->id))

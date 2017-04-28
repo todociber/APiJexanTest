@@ -81,15 +81,7 @@
                             <!-- Menu Body -->
 
                             <!-- Menu Footer-->
-                            <li class="user-footer">
-                                <div class="pull-left">
-                                    <a href=""
-                                       class="btn btn-default btn-flat">Perfil</a>
-                                </div>
-                                <div class="pull-right">
-                                    <a href="" class="btn btn-default btn-flat">Cerrar Sesión</a>
-                                </div>
-                            </li>
+
                         </ul>
                     </li>
                     <!-- Control Sidebar Toggle a -->
@@ -116,6 +108,8 @@
 
                 <li><a href="{{base_url()}}myItems"><i class="fa fa-circle-o text-yellow"></i>
                         <span>Items</span></a></li>
+                <li><a href="{{base_url()}}MyProfile"><i class="fa fa-circle-o text-green"></i>
+                        <span>Profile</span></a></li>
                 <li><a href="{{base_url()}}login/logout"><i class="fa fa-circle-o text-red"></i>
                         <span>Logout</span></a></li>
 
