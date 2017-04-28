@@ -214,7 +214,7 @@ class Api_Ebay
                     "listingType"                   =>  $item->listingInfo->listingType,
                     "gift"                          =>  $item->listingInfo->gift,
                     "returnsStatus"                 =>  $item->returnsAccepted,
-                    "conditions_id"                 =>  $conditions->id|| 1,
+                    "conditions_id"                 =>  $conditions->id,
                     "isMultiVariationListingStatus" =>  $item->isMultiVariationListing,
                     "topRatedListingStatus"         =>  $item->topRatedListing,
                     "Profiles_Ebay_id"              =>  $id,
