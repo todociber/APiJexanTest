@@ -175,12 +175,11 @@ class Api_Ebay
                     $paymentMethod->save();
                 }
                 $conditions = ConditionsEbay::where('id_ebay',$item->condition->conditionId)->first();
-                if(count($conditions)==0 && $item->condition->conditionId!=NULL && $item->condition->conditionDisplayName !=NULL )
-                {
+                if(count($conditions)==0 && $item->condition->conditionId!=NULL && $item->condition->conditionDisplayName !=NULL ) {
                     $conditions = new ConditionsEbay();
                     $conditions->fill([
-                        "id_ebay"=>$item->condition->conditionId,
-                        "name"=>$item->condition->conditionDisplayName
+                        "id_ebay" => $item->condition->conditionId,
+                        "name" => $item->condition->conditionDisplayName
                     ]);
                     $conditions->save();
                 }
