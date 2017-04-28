@@ -35,9 +35,9 @@ class ProfileController extends CI_Controller
 
     public function profileSeller()
     {
-        if($this->authuser->is_seller){
+        if($this->authuser->is_seller()){
             $user = User::find($this->session->userdata('user_id'));
-            $this->blade->view('Profile.ProfileSeller',compact($user));
+            $this->blade->view('Profile.ProfileSeller',compact('user'));
         }
         else
         {
